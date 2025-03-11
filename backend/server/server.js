@@ -1,27 +1,50 @@
 const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const morgan = require("morgan");
+
+const loginRoute = require("./routes/userLogin");
+const getAllUsersRoute = require("./routes/userGetAllUsers");
+const registerRoute = require("./routes/userSignUp");
+const getUserByIdRoute = require("./routes/userGetUserById");
+const editUser = require("./routes/userEditUser");
+const deleteUser = require("./routes/userDeleteAll");
+const dbConnection = require("./config/db.config");
+
+dotenv.config();
+
+const SERVER_PORT = process.env.SERVER_PORT || 8081;
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(",") : "*";
+
 const app = express();
-const cors = require('cors')
-const loginRoute = require('./routes/userLogin')
-const getAllUsersRoute = require('./routes/userGetAllUsers')
-const registerRoute = require('./routes/userSignUp')
-const getUserByIdRoute = require('./routes/userGetUserById')
-const dbConnection = require('./config/db.config')
-const editUser = require('./routes/userEditUser')
-const deleteUser = require('./routes/userDeleteAll')
 
-require('dotenv').config();
-const SERVER_PORT = 8081
-
+// Ensure database connection before starting server
 dbConnection()
-app.use(cors({origin: '*'}))
-app.use(express.json())
-app.use('/user', loginRoute)
-app.use('/user', registerRoute)
-app.use('/user', getAllUsersRoute)
-app.use('/user', getUserByIdRoute)
-app.use('/user', editUser)
-app.use('/user', deleteUser)
+  .then(() => {
+    console.log("✅ Connected to the database.");
 
-app.listen(SERVER_PORT, (req, res) => {
-    console.log(`The backend service is running on port ${SERVER_PORT} and waiting for requests.`);
-})
+    app.use(cors({ origin: ALLOWED_ORIGINS }));
+    app.use(express.json());
+    app.use(morgan("dev")); // Logs HTTP requests
+
+    app.use("/user", loginRoute);
+    app.use("/user", registerRoute);
+    app.use("/user", getAllUsersRoute);
+    app.use("/user", getUserByIdRoute);
+    app.use("/user", editUser);
+    app.use("/user", deleteUser);
+
+    // Global error handler
+    app.use((err, req, res, next) => {
+      console.error("❌ Error:", err.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    });
+
+    app.listen(SERVER_PORT, () => {
+      console.log(`🚀 Server running on port ${SERVER_PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ Database connection failed:", err.message);
+    process.exit(1); // Exit process if DB connection fails
+  });

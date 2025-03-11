@@ -1,10 +1,23 @@
 const express = require("express");
 const router = express.Router();
-const newUserModel = require('../models/userModel')
+const newUserModel = require("../models/userModel");
 
-router.post('/deleteAll', async (req, res) => {
-    const user = await newUserModel.deleteMany();
-    return res.json(user)
-  })
+// Middleware for authentication (example, replace with actual auth logic)
+const authenticateAdmin = (req, res, next) => {
+  if (!req.user || !req.user.isAdmin) {
+    return res.status(403).json({ message: "Access denied. Admins only." });
+  }
+  next();
+};
 
-  module.exports = router;
+// Route to delete all users (admin-only)
+router.post("/deleteAll", authenticateAdmin, async (req, res) => {
+  try {
+    const result = await newUserModel.deleteMany();
+    return res.json({ message: "All users deleted successfully.", result });
+  } catch (error) {
+    return res.status(500).json({ message: "Error deleting users.", error });
+  }
+});
+
+module.exports = router;

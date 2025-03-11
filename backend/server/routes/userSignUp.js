@@ -1,43 +1,64 @@
 const express = require("express");
 const router = express.Router();
-const z = require('zod')
 const bcrypt = require("bcrypt");
-const { newUserValidation } = require('../models/userValidator')
-const newUserModel = require('../models/userModel')
+const { newUserValidation } = require("../models/userValidator");
+const newUserModel = require("../models/userModel");
 
-router.post('/signup', async (req, res) => {
-    const { error } = newUserValidation(req.body);
-    console.log(error)
-    if (error) return res.status(400).send({ message: error.errors[0].message });
+// Function to generate a random username
+const generateRandomUsername = () => {
+  const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
+  let username = "User";
+  for (let i = 0; i < 6; i++) {
+    username += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return username;
+};
 
-    const { username, email, password } = req.body
-
-    //check if email already exists
-    const user = await newUserModel.findOne({ username: username })
-    if (user)
-        return res.status(409).send({ message: "Username is taken, pick another" })
-
-    //generates the hash
-    const generateHash = await bcrypt.genSalt(Number(10))
-
-    //parse the generated hash into the password
-    const hashPassword = await bcrypt.hash(password, generateHash)
-
-    //creates a new user
-    const createUser = new newUserModel({
-        username: username,
-        email: email,
-        password: hashPassword,
-    });
-
-   
-    try {
-        const saveNewUser = await createUser.save();
-        res.send(saveNewUser);
-    } catch (error) {
-        res.status(400).send({ message: "Error trying to create new user" });
+router.post("/signup", async (req, res) => {
+  try {
+    // Validate user input
+    const validationResult = newUserValidation(req.body);
+    if (!validationResult.success) {
+      return res.status(400).json({ message: validationResult.error.errors[0].message });
     }
 
-})
+    const { email, password, dateOfBirth } = req.body;
+
+    // Ensure user is 13 or older
+    const birthDate = new Date(dateOfBirth);
+    const age = new Date().getFullYear() - birthDate.getFullYear();
+    if (age < 13) {
+      return res.status(403).json({ message: "You must be at least 13 years old to create an account." });
+    }
+
+    // Check if email already exists
+    const existingUser = await newUserModel.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ message: "An account with this email already exists." });
+    }
+
+    // Generate a secure random username
+    const username = generateRandomUsername();
+
+    // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create a new user
+    const newUser = new newUserModel({
+      username,
+      email,
+      password: hashedPassword,
+      dateOfBirth,
+    });
+
+    // Save the new user
+    await newUser.save();
+    res.status(201).json({ message: "Account created successfully.", username });
+  } catch (error) {
+    console.error("Signup error:", error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
 
 module.exports = router;
