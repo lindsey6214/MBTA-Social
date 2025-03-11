@@ -18,12 +18,14 @@
   "homepage": "https://github.com/Tochey/User_Service#readme",
   "dependencies": {
     "bcrypt": "^5.1.0",
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "i": "^0.3.7",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.6.5",
+    "morgan": "^1.10.0",
     "zod": "^3.19.1"
   },
   "devDependencies": {
