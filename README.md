@@ -1,5 +1,5 @@
-# mern-user-skeleton
-This MERN stack implementation creates a small web application that lets users register, login, view a home page, and logout. 
+# Massachusetts Bay Transportation Authority (MBTA) Social App
+The MBTA Social Media App is an interactive social media platform designed for students, commuters, and residents from Boston and its surrounding communities. This app will connect all its users whether at home or in transit through real-time updates and posts. From sharing art and graffiti pictures to rating station safety and cleanliness, and crazy encounters you will never forget, this app will have it all. Users can interact with each other by posting photos, videos, comments, and ratings. “Liking” posts allow for uninterrupted communication, helping users stay engaged and share their experiences instantly. Even an unregistered user can browse content and view posts to stay informed. Finding specific information is easier than ever with an option to search, hashtag, and tag other users. This app is powered by the people who ride the MBTA every day, and with great power comes great responsibility. All content will be monitored to maintain a respectful environment as offensive language and violent media are strictly prohibited.  
 
 Configuration
 -------------
