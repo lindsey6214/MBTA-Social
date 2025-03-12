@@ -36,13 +36,16 @@ dbConnection()
 
     // post routes
     app.use(require("./routes/posts/post.createPost"));
-  app.use(require("./routes/posts/post.deletePost"));
-  app.use(require("./routes/posts/post.getAllPosts"));
-  app.use(require("./routes/posts/post.getPostPage"));
-  app.use(require("./routes/posts/post.getPostPageByUsername"));
-  app.use(require("C:\Users\mered\CSC300\MBTA-Social\backend\server\routes\posts\post.getPostById.js"));
-  app.use(require("backend\server\routes\posts\post.updatePost.js"));
-  app.use(require("backend\server\routes\posts\post.search.js"));
+    app.use(require("./routes/posts/post.deletePost"));
+    app.use(require("./routes/posts/post.getAllByUsername"));
+    app.use(require("./routes/posts/post.getAllPosts"));
+    app.use(require("./routes/posts/post.getPostById"));
+    app.use(require("./routes/posts/post.getPostByPage"));
+    app.use(require("./routes/posts/post.getPostPageByUsername"));
+    app.use(require("./routes/posts/post.search"));
+    app.use(require("./routes/posts/post.updatePost"));
+
+ 
 
 
     // Global error handler
