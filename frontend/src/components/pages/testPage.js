@@ -1,33 +1,23 @@
-import React, {useState, useEffect, useContext} from 'react';
-import getUserInfo from '../../utilities/decodeJwt';
-import Alert from 'react-bootstrap/Alert';
-import Stack from 'react-bootstrap/Stack';
-import { UserContext } from '../../App';
-
-
-//  test change
+import React, { useContext } from "react";
+import Alert from "react-bootstrap/Alert";
+import Stack from "react-bootstrap/Stack";
+import { UserContext } from "../../App";
 
 const Test = () => {
-    // const [user, setUser] = useState(null)
-    const value = useContext(UserContext)
+  const user = useContext(UserContext);
 
-    // useEffect(() => {
-      
-    // const obj = getUserInfo()
-    // setUser(obj)
-     
-    // }, [])
-    console.log(value)
+  console.log("User Context:", user);
+
   return (
-    <Stack direction="verticle" gap={2}>
+    <Stack direction="vertical" gap={2}>
       <div className="mx-2">
         <h4>Authenticated User</h4>
       </div>
-      <Alert variant='primary' className="mx-2">
-        {JSON.stringify(value, null, 2)}
+      <Alert variant="primary" className="mx-2">
+        {JSON.stringify(user, null, 2)}
       </Alert>
     </Stack>
-  )
-}
+  );
+};
 
-export default Test
+export default Test;
