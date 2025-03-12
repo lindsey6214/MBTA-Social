@@ -11,7 +11,7 @@ const url = `${process.env.REACT_APP_BACKEND_SERVER_URI}/user/login`;
 
 const Login = () => {
   const [user, setUser] = useState(null);
-  const [data, setData] = useState({ username: "", password: "" });
+  const [data, setData] = useState({ email: "", password: "" }); // Changed username → email
   const [error, setError] = useState("");
   const [lightMode, setLightMode] = useState(false);
   const navigate = useNavigate();
@@ -49,8 +49,8 @@ const Login = () => {
         <h3 className="text-center" style={{ color: PRIMARY_COLOR }}>Login</h3>
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
-            <Form.Label style={{ fontWeight: "bold", color: PRIMARY_COLOR }}>Username</Form.Label>
-            <Form.Control type="text" name="username" onChange={handleChange} placeholder="Enter username" required />
+            <Form.Label style={{ fontWeight: "bold", color: PRIMARY_COLOR }}>Email</Form.Label> 
+            <Form.Control type="email" name="email" onChange={handleChange} placeholder="Enter email" required />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label style={{ fontWeight: "bold", color: PRIMARY_COLOR }}>Password</Form.Label>

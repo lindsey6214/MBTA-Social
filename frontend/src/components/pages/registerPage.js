@@ -1,125 +1,66 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
 const PRIMARY_COLOR = "#cc5c99";
 const SECONDARY_COLOR = "#0c0c1f";
-const url = `${process.env.REACT_APP_BACKEND_SERVER_URI}/user/signup`;
+const url = `${process.env.REACT_APP_BACKEND_SERVER_URI}/user/register`;
 
 const Register = () => {
-  const [data, setData] = useState({ email: "", password: "" });
+  const [data, setData] = useState({ email: "", password: "", birthday: "" });
   const [error, setError] = useState("");
+  const [lightMode, setLightMode] = useState(false);
   const navigate = useNavigate();
-  const [light, setLight] = useState(false);
-  const [bgColor, setBgColor] = useState(SECONDARY_COLOR);
-  const [bgText, setBgText] = useState("Light Mode");
 
-  const handleChange = ({ currentTarget: input }) => {
-    setData({ ...data, [input.name]: input.value });
-  };
-
-  useEffect(() => {
-    setBgColor(light ? "white" : SECONDARY_COLOR);
-    setBgText(light ? "Dark Mode" : "Light Mode");
-  }, [light]);
-
-  const labelStyling = {
-    color: PRIMARY_COLOR,
-    fontWeight: "bold",
-    textDecoration: "none",
-  };
-
-  const backgroundStyling = { background: bgColor };
-
-  const buttonStyling = {
-    background: PRIMARY_COLOR,
-    borderStyle: "none",
-    color: bgColor,
+  const handleChange = ({ target: { name, value } }) => {
+    setData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data: res } = await axios.post(url, data);
-      window.alert(
-        `Registration successful! Your username is "${res.username}". Please log in.`
-      );
+      await axios.post(url, data);
       navigate("/login");
     } catch (error) {
-      if (
-        error.response &&
-        error.response.status >= 400 &&
-        error.response.status <= 500
-      ) {
+      if (error.response?.status >= 400) {
         setError(error.response.data.message);
       }
     }
   };
 
   return (
-    <section className="vh-100">
-      <div className="container-fluid h-custom vh-100">
-        <div
-          className="row d-flex justify-content-center align-items-center h-100"
-          style={backgroundStyling}
-        >
-          <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-            <Form onSubmit={handleSubmit}>
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label style={labelStyling}>Email</Form.Label>
-                <Form.Control
-                  type="email"
-                  name="email"
-                  onChange={handleChange}
-                  placeholder="Enter your email"
-                  required
-                />
-              </Form.Group>
-
-              <Form.Group className="mb-3" controlId="formBasicPassword">
-                <Form.Label style={labelStyling}>Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  name="password"
-                  placeholder="Enter your password"
-                  onChange={handleChange}
-                  required
-                />
-              </Form.Group>
-
-              <div className="form-check form-switch">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="flexSwitchCheckDefault"
-                  onChange={() => setLight(!light)}
-                />
-                <label
-                  className="form-check-label text-muted"
-                  htmlFor="flexSwitchCheckDefault"
-                >
-                  {bgText}
-                </label>
-              </div>
-
-              {error && (
-                <div style={labelStyling} className="pt-3">
-                  {error}
-                </div>
-              )}
-
-              <Button
-                variant="primary"
-                type="submit"
-                style={buttonStyling}
-                className="mt-2"
-              >
-                Register
-              </Button>
-            </Form>
-          </div>
+    <section className="vh-100 d-flex justify-content-center align-items-center" style={{ background: lightMode ? "white" : SECONDARY_COLOR }}>
+      <div className="col-md-6 col-lg-4 p-4 shadow-lg bg-white rounded">
+        <h3 className="text-center" style={{ color: PRIMARY_COLOR }}>Sign Up</h3>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-3">
+            <Form.Label style={{ fontWeight: "bold", color: PRIMARY_COLOR }}>Email</Form.Label>
+            <Form.Control type="email" name="email" onChange={handleChange} placeholder="Enter email" required />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label style={{ fontWeight: "bold", color: PRIMARY_COLOR }}>Password</Form.Label>
+            <Form.Control type="password" name="password" onChange={handleChange} placeholder="Password" required />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label style={{ fontWeight: "bold", color: PRIMARY_COLOR }}>Birthday</Form.Label>
+            <Form.Control type="date" name="birthday" onChange={handleChange} required />
+          </Form.Group>
+          {error && <div className="text-danger text-center">{error}</div>}
+          <Button type="submit" style={{ background: PRIMARY_COLOR, border: "none", width: "100%" }} className="mt-3">
+            Sign Up
+          </Button>
+        </Form>
+        <div className="text-center mt-3">
+          <span className="text-muted">Already have an account?</span> 
+          <Link to="/login" style={{ color: PRIMARY_COLOR, fontWeight: "bold" }}> Log in</Link>
+        </div>
+        <div className="form-check form-switch mt-3 text-center">
+          <input className="form-check-input" type="checkbox" id="themeSwitch" onChange={() => setLightMode(!lightMode)} />
+          <label className="form-check-label text-muted" htmlFor="themeSwitch">
+            {lightMode ? "Dark Mode" : "Light Mode"}
+          </label>
         </div>
       </div>
     </section>
