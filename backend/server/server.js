@@ -34,6 +34,17 @@ dbConnection()
     app.use("/user", editUser);
     app.use("/user", deleteUser);
 
+    // post routes
+    app.use(require("./routes/posts/post.createPost"));
+  app.use(require("./routes/posts/post.deletePost"));
+  app.use(require("./routes/posts/post.getAllPosts"));
+  app.use(require("./routes/posts/post.getPostPage"));
+  app.use(require("./routes/posts/post.getPostPageByUsername"));
+  app.use(require("C:\Users\mered\CSC300\MBTA-Social\backend\server\routes\posts\post.getPostById.js"));
+  app.use(require("backend\server\routes\posts\post.updatePost.js"));
+  app.use(require("backend\server\routes\posts\post.search.js"));
+
+
     // Global error handler
     app.use((err, req, res, next) => {
       console.error("❌ Error:", err.message);
