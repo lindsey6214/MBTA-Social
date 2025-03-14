@@ -54,3 +54,13 @@ POST  http://localhost:8081/user/deleteAll
 ###
 GET http://localhost:8081/posts
 Content-Type: application/json
+
+###
+POST  http://localhost:8081/post/createPost
+Content-Type: application/json
+
+{
+    "content" : "test content",
+    "userId" : "635ab8dfc407faf9f73deaf1",
+    "username" : "Hi"
+}
