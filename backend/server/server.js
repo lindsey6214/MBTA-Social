@@ -9,7 +9,9 @@ const registerRoute = require("./routes/userSignUp");
 const getUserByIdRoute = require("./routes/userGetUserById");
 const editUser = require("./routes/userEditUser");
 const deleteUser = require("./routes/userDeleteAll");
+const createPost =require("./routes/posts/createPost")
 const dbConnection = require("./config/db.config");
+
 
 dotenv.config();
 
@@ -33,6 +35,7 @@ dbConnection()
     app.use("/user", getUserByIdRoute);
     app.use("/user", editUser);
     app.use("/user", deleteUser);
+    app.use("/post", createPost);
 
     // post routes
     app.use(require("./routes/posts/post.getAllPosts"));
