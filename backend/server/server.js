@@ -35,18 +35,7 @@ dbConnection()
     app.use("/user", deleteUser);
 
     // post routes
-    app.use(require("./routes/posts/post.createPost"));
-    app.use(require("./routes/posts/post.deletePost"));
-    app.use(require("./routes/posts/post.getAllByUsername"));
     app.use(require("./routes/posts/post.getAllPosts"));
-    app.use(require("./routes/posts/post.getPostById"));
-    app.use(require("./routes/posts/post.getPostByPage"));
-    app.use(require("./routes/posts/post.getPostPageByUsername"));
-    app.use(require("./routes/posts/post.search"));
-    app.use(require("./routes/posts/post.updatePost"));
-
- 
-
 
     // Global error handler
     app.use((err, req, res, next) => {
