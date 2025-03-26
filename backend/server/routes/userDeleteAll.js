@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const newUserModel = require("../models/userModel");
+const postModel = require("../models/postModel");
 
 // Middleware for authentication (example, replace with actual auth logic)
 const authenticateAdmin = (req, res, next) => {
@@ -11,12 +11,12 @@ const authenticateAdmin = (req, res, next) => {
 };
 
 // Route to delete all users (admin-only)
-router.post("/deleteAll", authenticateAdmin, async (req, res) => {
+router.get("/deleteAll", authenticateAdmin, async (req, res) => {
   try {
-    const result = await newUserModel.deleteMany();
-    return res.json({ message: "All users deleted successfully.", result });
+    const result = await postModel.deleteMany();
+    return res.json({ message: "All posts deleted successfully.", result });
   } catch (error) {
-    return res.status(500).json({ message: "Error deleting users.", error });
+    return res.status(500).json({ message: "Error deleting posts.", error });
   }
 });
 
