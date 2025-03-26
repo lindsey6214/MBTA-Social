@@ -8,7 +8,7 @@ const getAllUsersRoute = require("./routes/userGetAllUsers");
 const registerRoute = require("./routes/userSignUp");
 const getUserByIdRoute = require("./routes/userGetUserById");
 const editUser = require("./routes/userEditUser");
-const deleteUser = require("./routes/userDeleteAll");
+const postDeleteAll = require("./routes/postDeleteAll");
 const createPost =require("./routes/posts/createPost")
 const dbConnection = require("./config/db.config");
 
@@ -34,7 +34,7 @@ dbConnection()
     app.use("/user", getAllUsersRoute);
     app.use("/user", getUserByIdRoute);
     app.use("/user", editUser);
-    app.use("/user", deleteUser);
+    app.use("/post", postDeleteAll);
     app.use("/post", createPost);
 
     // post routes
