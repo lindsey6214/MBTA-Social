@@ -9,9 +9,9 @@ const registerRoute = require("./routes/userSignUp");
 const getUserByIdRoute = require("./routes/userGetUserById");
 const editUser = require("./routes/userEditUser");
 const postDeleteAll = require("./routes/postDeleteAll");
-const createPost =require("./routes/posts/createPost")
+const createPost = require("./routes/posts/createPost");
+const updatePost = require("./routes/posts/updatePost");
 const dbConnection = require("./config/db.config");
-
 
 dotenv.config();
 
@@ -29,15 +29,19 @@ dbConnection()
     app.use(express.json());
     app.use(morgan("dev")); // Logs HTTP requests
 
+    // User-related routes
     app.use("/user", loginRoute);
     app.use("/user", registerRoute);
     app.use("/user", getAllUsersRoute);
     app.use("/user", getUserByIdRoute);
     app.use("/user", editUser);
+
+    // Post-related routes
     app.use("/post", postDeleteAll);
     app.use("/post", createPost);
+    app.use("/post", updatePost);
 
-    // post routes
+    // Get all posts route (assuming this is part of post functionality)
     app.use(require("./routes/posts/post.getAllPosts"));
 
     // Global error handler
@@ -46,6 +50,7 @@ dbConnection()
       res.status(500).json({ message: "Internal Server Error" });
     });
 
+    // Start the server
     app.listen(SERVER_PORT, () => {
       console.log(`🚀 Server running on port ${SERVER_PORT}`);
     });
