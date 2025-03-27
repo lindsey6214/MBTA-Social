@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 
 const userSchema = new mongoose.Schema({
@@ -12,22 +11,13 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minlength: 8,
+    minlength: 8, // Keep length validation, but no regex here
     maxlength: 128,
-    validate: {
-      validator: function (value) {
-        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/.test(
-          value
-        );
-      },
-      message:
-        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
-    },
   },
   username: {
     type: String,
     unique: true,
-    immutable: true, // Prevents modification
+    immutable: true,
     default: function () {
       return "User" + crypto.randomInt(1000, 9999);
     },
@@ -38,30 +28,17 @@ const userSchema = new mongoose.Schema({
     validate: {
       validator: function (value) {
         const today = new Date();
-        const minAgeDate = new Date(
-          today.getFullYear() - 13,
-          today.getMonth(),
-          today.getDate()
-        );
-        return value <= minAgeDate;
+        let age = today.getFullYear() - value.getFullYear();
+        const monthDiff = today.getMonth() - value.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < value.getDate())) {
+          age--; 
+        }
+        return age >= 13;
       },
       message: "Users must be at least 13 years old to sign up.",
     },
   },
 });
-
-// Hash password before saving
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
-});
-
-// Method to compare passwords for login
-userSchema.methods.comparePassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
 
 const User = mongoose.model("User", userSchema);
 
