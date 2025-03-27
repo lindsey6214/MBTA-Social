@@ -21,14 +21,14 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(url, data);
+      await axios.post(url, { ...data, birthdate: data.birthday }); // Rename "birthday" to "birthdate"
       navigate("/login");
     } catch (error) {
       if (error.response?.status >= 400) {
         setError(error.response.data.message);
       }
     }
-  };
+  };  
 
   return (
     <section className="vh-100 d-flex justify-content-center align-items-center" style={{ background: lightMode ? "white" : SECONDARY_COLOR }}>
