@@ -64,3 +64,17 @@ Content-Type: application/json
     "userId" : "635ab8dfc407faf9f73deaf1",
     "username" : "Hi"
 }
+
+###
+PUT http://localhost:8081/post/updatePost/67e4b692877570f2cb78eab2
+Content-Type: application/json
+
+{
+    "content": "updated content",
+    "isSensitive": true,
+    "hasOffensiveText": false
+}
+
+###
+GET http://localhost:8081/post/updatePost/{postId}
+Content-Type: application/json
