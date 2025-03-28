@@ -1,4 +1,4 @@
-//scaffolding 
+
 const express = require("express");
 const router = express.Router();
 const newPostModel = require('../../models/postModel')
