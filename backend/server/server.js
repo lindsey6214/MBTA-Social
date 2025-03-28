@@ -11,6 +11,8 @@ const editUser = require("./routes/userEditUser");
 const postDeleteAll = require("./routes/postDeleteAll");
 const createPost =require("./routes/posts/createPost")
 const dbConnection = require("./config/db.config");
+const likePost = require("./routes/likePost");
+
 
 
 dotenv.config();
@@ -36,6 +38,7 @@ dbConnection()
     app.use("/user", editUser);
     app.use("/post", postDeleteAll);
     app.use("/post", createPost);
+    app.use("/post", likePost);
 
     // post routes
     app.use(require("./routes/posts/post.getAllPosts"));

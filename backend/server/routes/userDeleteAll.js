@@ -10,7 +10,7 @@ const authenticateAdmin = (req, res, next) => {
   next();
 };
 
-// Route to delete all users (admin-only)
+// Route to delete all posts (admin-only)
 router.get("/deleteAll", authenticateAdmin, async (req, res) => {
   try {
     const result = await postModel.deleteMany();
