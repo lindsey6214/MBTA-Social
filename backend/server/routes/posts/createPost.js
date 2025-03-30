@@ -8,18 +8,16 @@ router.post("/createPost", async (req, res) => {
   const { userId, content, imageUri, isSensitive, hasOffensiveText, username } = req.body;
 
   try {
-    // Check if the user exists
-    // const user = await User.findById(userId);
-    // if (!user) {
-    //   return res.status(404).json({ message: "User not found" });
-    // }
+    // Check if the username exists in the database
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
     // Create new post
     const newPost = new Post({
       userId,
       username,
-    
-     // username: user.username, // Get username from the user model
       content,
       imageUri,
       isSensitive,

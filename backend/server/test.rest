@@ -2,13 +2,12 @@ POST http://localhost:8081/user/signup
 Content-Type: application/json 
 
 {
-    "email": "cdo@gmail.com",
-    "password": "Tochi12345!",
+    "email": "",
+    "password": "",
     "birthdate": "2004-06-21"
 }
 
 ###
-
 POST http://localhost:8081/user/login
 Content-Type: application/json 
 
@@ -17,12 +16,22 @@ Content-Type: application/json
     "password" : "Sharon122!"
 }
 
+### Make User an Admin
+POST http://localhost:8081/user/makeUserAnAdmin
+Content-Type: application/json
+
+{
+  "email": "",
+  "password": "",
+  "accessCode": "BlueLineIsTheBestLine12345"
+}
+
 ###
 GET http://localhost:8081/user/getAll
+access-code: BlueLineIsTheBestLine12345
 Content-Type: application/json
 
 ###
-
 POST http://localhost:8081/user/editUser
 Content-Type: application/json 
 
@@ -37,23 +46,20 @@ GET  http://localhost:8081/user/getUserById
 Content-Type: application/json 
 
 {
-    "userId" : "635ab8dfc407faf9f73deaf1"
+    "userId" : ""
 }
 
 ###
-GET  http://localhost:8081/user/getUserById
-Content-Type: application/json 
+DELETE http://localhost:8081/user/deleteUserByEmail
+Content-Type: application/json
 
 {
-    "userId" : "634edb2a16710b2cda6fb370"
+  "email": "",
+  "accessCode": "BlueLineIsTheBestLine12345"
 }
 
 ###
 POST  http://localhost:8081/post/deleteAll
-
-###
-GET http://localhost:8081/posts
-Content-Type: application/json
 
 ###
 POST  http://localhost:8081/post/createPost
@@ -61,12 +67,12 @@ Content-Type: application/json
 
 {
     "content" : "test commment post",
-    "userId" : "635ab8dfc407faf9f73deaf1",
-    "username" : "Hi"
+    "userId" : "67e9b2cf929242eb614074af",
+    "username" : "User5g9fdw"
 }
 
 ###
-PUT http://localhost:8081/post/updatePost/67e4b692877570f2cb78eab2
+PUT http://localhost:8081/post/updatePost/67e9b91accedbe47a28838b4
 Content-Type: application/json
 
 {
@@ -74,14 +80,15 @@ Content-Type: application/json
     "isSensitive": true,
     "hasOffensiveText": false
 }
+
 ###
 POST http://localhost:8081/comments/createComment
 Content-Type: application/json
 
 {
-    "postID": "67e9793734244a079b295f74",
-    "userID": "635ab8dfc407faf9f73deaf1",
-    "username": "Hi",
+    "postID": "67e9b8b0ccedbe47a28838aa",
+    "userID": "67e9b2cf929242eb614074af",
+    "username": "User5g9fdw",
     "content": "Test comment!!!!!!!!",
     "parentComment": null
 }

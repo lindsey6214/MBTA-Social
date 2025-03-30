@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const postModel = require("../models/postModel");
+const postModel = require("../../models/postModel");
 
 // Middleware for authentication (example, replace with actual auth logic)
 const authenticateAdmin = (req, res, next) => {
