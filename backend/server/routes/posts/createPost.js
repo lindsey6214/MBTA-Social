@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Post = require("../../models/postModel"); 
-const User = require("../../models/postModel"); 
+const User = require("../../models/userModel"); 
 
 // Create a new post
 router.post("/createPost", async (req, res) => {
