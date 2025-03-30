@@ -5,10 +5,12 @@ const morgan = require("morgan");
 
 const loginRoute = require("./routes/userLogin");
 const getAllUsersRoute = require("./routes/userGetAllUsers");
+const makeUserAnAdmin = require("./routes/makeUserAnAdmin");
 const registerRoute = require("./routes/userSignUp");
 const getUserByIdRoute = require("./routes/userGetUserById");
 const editUser = require("./routes/userEditUser");
-const postDeleteAll = require("./routes/postDeleteAll");
+const userDeleteUser = require("./routes/userDeleteUser");
+const postDeleteAll = require("./routes/posts/postDeleteAll");
 const createPost = require("./routes/posts/createPost");
 const updatePost = require("./routes/posts/updatePost");
 const createComment = require("./routes/comments/createComment");
@@ -38,6 +40,8 @@ dbConnection()
     app.use("/user", getAllUsersRoute);
     app.use("/user", getUserByIdRoute);
     app.use("/user", editUser);
+    app.use("/user", userDeleteUser);
+    app.use("/user", makeUserAnAdmin);
 
     // Post-related routes
     app.use("/post", postDeleteAll);
