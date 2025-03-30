@@ -2,7 +2,7 @@ POST http://localhost:8081/user/signup
 Content-Type: application/json 
 
 {
-    "email": "cdon@gmail.com",
+    "email": "cdo@gmail.com",
     "password": "Tochi12345!",
     "birthdate": "2004-06-21"
 }
@@ -28,8 +28,8 @@ Content-Type: application/json
 
 {
     "userId" : "635ab8dfc407faf9f73deaf2",
-    "username" : "Tochi Edit",
-    "password" : "dwwrwr"
+    "username" : "Userf8u2sf",
+    "password" : "Tochi12345!"
 }
 
 ###
@@ -60,7 +60,7 @@ POST  http://localhost:8081/post/createPost
 Content-Type: application/json
 
 {
-    "content" : "test content",
+    "content" : "test commment post",
     "userId" : "635ab8dfc407faf9f73deaf1",
     "username" : "Hi"
 }
@@ -74,7 +74,38 @@ Content-Type: application/json
     "isSensitive": true,
     "hasOffensiveText": false
 }
+###
+POST http://localhost:8081/comments/createComment
+Content-Type: application/json
+
+{
+    "postID": "67e9793734244a079b295f74",
+    "userID": "635ab8dfc407faf9f73deaf1",
+    "username": "Hi",
+    "content": "Test comment!!!!!!!!",
+    "parentComment": null
+}
 
 ###
-GET http://localhost:8081/post/updatePost/{postId}
+GET http://localhost:8081/comments
+Content-Type: application/json
+
+###
+GET http://localhost:8081/comments/post/67e4b692877570f2cb78eab2
+Content-Type: application/json
+
+###
+GET http://localhost:8081/comments/5f8d04c5b54764421b7156fa
+Content-Type: application/json
+
+###
+PUT http://localhost:8081/comments/updateComment/5f8d04c5b54764421b7156fa
+Content-Type: application/json
+
+{
+    "content": "Updated comment content"
+}
+
+###
+DELETE http://localhost:8081/comments/deleteComment/5f8d04c5b54764421b7156fa
 Content-Type: application/json

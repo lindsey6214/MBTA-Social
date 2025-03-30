@@ -11,6 +11,9 @@ const editUser = require("./routes/userEditUser");
 const postDeleteAll = require("./routes/postDeleteAll");
 const createPost = require("./routes/posts/createPost");
 const updatePost = require("./routes/posts/updatePost");
+const createComment = require("./routes/comments/createComment");
+const updateComment = require("./routes/comments/updateComment");
+const getComment = require("./routes/comments/getComment");
 const dbConnection = require("./config/db.config");
 
 dotenv.config();
@@ -41,8 +44,13 @@ dbConnection()
     app.use("/post", createPost);
     app.use("/post", updatePost);
 
-    // Get all posts route (assuming this is part of post functionality)
+    // Get all posts route
     app.use(require("./routes/posts/post.getAllPosts"));
+
+    // Comment routes
+    app.use("/comments", createComment);
+    app.use("/comments", updateComment);
+    app.use("/comments", getComment);
 
     // Global error handler
     app.use((err, req, res, next) => {

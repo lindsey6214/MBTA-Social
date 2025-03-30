@@ -1,64 +1,42 @@
-const {v4 : uuid} = require("uuid"); //creates unique id
-const mongoose = require ("mongoose");
+const express = require("express");
+const router = express.Router();
+const Comment = require("../../models/commentModel");
+const Post = require("../../models/postModel");
+const User = require("../../models/userModel");
 
-const commentSchema = new mongoose.Schema({
-    commentID: { type: String, default: uuidv4, unique: true },
-    postID: { type: mongoose.Schema.Types.ObjectId, ref: "Post", required: true },
-    userID: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    username: { type: String, required: true },
-    content: { type: String, required: true },
-    timestamp: { type: Date, default: Date.now },
-    parentComment: { type: mongoose.Schema.Types.ObjectId, ref: "Comment", default: null },
+// Create a new comment
+router.post("/createComment", async (req, res) => {
+  const { postID, userID, username, content, parentComment } = req.body;
+
+  try {
+    // Check if the post exists
+    const post = await Post.findById(postID);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    // Check if the user exists
+    const user = await User.findById(userID);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Create new comment
+    const newComment = new Comment({
+      postID,
+      userID,
+      username,
+      content,
+      parentComment,
+    });
+
+    // Save to database
+    const savedComment = await newComment.save();
+    res.status(201).json(savedComment);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error trying to create new comment" });
+  }
 });
 
-const Comment = mongoose.model("Comment", commentSchema);
-
-class createComment{
-    constructor(postID, userID, content, parentComment = null){
-        this.commentID = uuidv4;
-        this.postID = postID;
-        this.userID = userID;
-        this.username = this.username;
-        this.content = content;
-        this.timestamp = new Date();
-        this.parentComment = parentComment;
-    }
-}
-
-validateContent();{
-    return this.content && this.content.trim().length > 0 && this.content.length >= 500;
-};
-//save to database
-saveToDatabase();{
-    if (!this.validateContent()){
-        console.log("Error: content empty, cannot post an empty comment");
-        return{success: false, message: "no content found"};
-    }
-    try{
-        const newComment = new Comment({
-            commentID: this.commentID,
-            postID: this.postID,
-            userID: this.userID,
-            username: this.username,
-            content: this.content,
-            timestamp: this.timestamp,
-            parentComment: this.parentComment
-        });
-        await newComment.save();
-        return{success: true, message: "sucessfully saved to database!!! yay :)", Comment: newComment};
-    } catch (error) {
-        console.error("Database Error:", error);
-        return { success: false, message: "Failed to save comment" };
-    }
-
-}
-async function createNewComment() {
-    const newComment = new CreateComment("post123", "user456", "JohnDoe", "Great post!");
-    const result = await newComment.saveToDatabase();
-    console.log(result);
-}
-
-// Call function to test
-createNewComment();
-
-module.exports = CreateComment;
+module.exports = router;
