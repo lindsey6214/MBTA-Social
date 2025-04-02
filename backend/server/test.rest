@@ -2,9 +2,9 @@ POST http://localhost:8081/user/signup
 Content-Type: application/json 
 
 {
-    "email": "",
-    "password": "",
-    "birthdate": "2004-06-21"
+    "email": "spraggins0602@gmail.com",
+    "password": "F0rtun3c00k!3",
+    "birthdate": "2004-06-02"
 }
 
 ###
@@ -66,13 +66,13 @@ POST  http://localhost:8081/post/createPost
 Content-Type: application/json
 
 {
-    "content" : "test commment post",
+    "content" : "commment post",
     "userId" : "67e9b2cf929242eb614074af",
     "username" : "User5g9fdw"
 }
 
 ###
-PUT http://localhost:8081/post/updatePost/67e9b91accedbe47a28838b4
+PUT http://localhost:8081/post/updatePost/67ed6b9390ee02a3b7f793b3
 Content-Type: application/json
 
 {
@@ -86,27 +86,28 @@ POST http://localhost:8081/comments/createComment
 Content-Type: application/json
 
 {
-    "postID": "67e9b8b0ccedbe47a28838aa",
+    "postID": "67ed73097181e27855a90578",
     "userID": "67e9b2cf929242eb614074af",
     "username": "User5g9fdw",
-    "content": "Test comment!!!!!!!!",
+    "content": "Test comment :)",
     "parentComment": null
 }
 
-###
-GET http://localhost:8081/comments
+### Get all comments
+GET http://localhost:8081/comments/getComment
 Content-Type: application/json
 
-###
-GET http://localhost:8081/comments/post/67e4b692877570f2cb78eab2
+### Get comments by post ID
+GET http://localhost:8081/comments/post/67ed73097181e27855a90578
 Content-Type: application/json
 
-###
-GET http://localhost:8081/comments/5f8d04c5b54764421b7156fa
+### Get a specific comment by its ID
+GET http://localhost:8081/comments/getComment/60b8d295f1e2a3d1c4c912e7
 Content-Type: application/json
 
+
 ###
-PUT http://localhost:8081/comments/updateComment/5f8d04c5b54764421b7156fa
+PUT http://localhost:8081/comments/updateComment/67ed6b9390ee02a3b7f793b3
 Content-Type: application/json
 
 {
@@ -114,5 +115,5 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:8081/comments/deleteComment/5f8d04c5b54764421b7156fa
+DELETE http://localhost:8081/comments/deleteComment/67ed7249c172842f1cd8a387
 Content-Type: application/json
