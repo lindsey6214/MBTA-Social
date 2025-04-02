@@ -16,6 +16,7 @@ const updatePost = require("./routes/posts/updatePost");
 const createComment = require("./routes/comments/createComment");
 const updateComment = require("./routes/comments/updateComment");
 const getComment = require("./routes/comments/getComment");
+const deleteComment = require("./routes/comments/deleteComment");
 const dbConnection = require("./config/db.config");
 
 dotenv.config();
@@ -55,6 +56,7 @@ dbConnection()
     app.use("/comments", createComment);
     app.use("/comments", updateComment);
     app.use("/comments", getComment);
+    app.use("/comments", deleteComment);
 
     // Global error handler
     app.use((err, req, res, next) => {
