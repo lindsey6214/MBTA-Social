@@ -12,6 +12,7 @@ const editUser = require("./routes/userEditUser");
 const userDeleteUser = require("./routes/userDeleteUser");
 const postDeleteAll = require("./routes/posts/postDeleteAll");
 const createPost = require("./routes/posts/createPost");
+const getPost = require("./routes/posts/getPost");
 const updatePost = require("./routes/posts/updatePost");
 const createComment = require("./routes/comments/createComment");
 const updateComment = require("./routes/comments/updateComment");
@@ -45,12 +46,10 @@ dbConnection()
     app.use("/user", makeUserAnAdmin);
 
     // Post-related routes
-    app.use("/post", postDeleteAll);
     app.use("/post", createPost);
+    app.use("/post", getPost);
+    app.use("/post", postDeleteAll);
     app.use("/post", updatePost);
-
-    // Get all posts route
-    app.use(require("./routes/posts/post.getAllPosts"));
 
     // Comment routes
     app.use("/comments", createComment);

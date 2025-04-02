@@ -3,7 +3,7 @@ const router = express.Router();
 const Comment = require("../../models/commentModel");
 
 // Get all comments
-router.get("/comments", async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const allComments = await Comment.find();
         return res.status(200).json(allComments);
@@ -13,9 +13,10 @@ router.get("/comments", async (req, res) => {
 });
 
 // Get comments by post ID
-router.get("/comments/post/:postID", async (req, res) => {
+router.get('/post/:postID', async (req, res) => {
+    const { postID } = req.params;
+    
     try {
-        const { postID } = req.params;
         const comments = await Comment.find({ postID }).sort({ timestamp: -1 });
 
         if (!comments.length) {
@@ -29,10 +30,11 @@ router.get("/comments/post/:postID", async (req, res) => {
 });
 
 // Get a specific comment by its ID
-router.get("/comments/:commentID", async (req, res) => {
+router.get('/:commentID', async (req, res) => {
+    const { commentID } = req.params;
+
     try {
-        const { commentID } = req.params;
-        const comment = await Comment.findOne({ commentID });
+        const comment = await Comment.findById(commentID);
 
         if (!comment) {
             return res.status(404).json({ message: "Comment not found" });
