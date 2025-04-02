@@ -66,7 +66,7 @@ POST  http://localhost:8081/post/createPost
 Content-Type: application/json
 
 {
-    "content" : "commment post",
+    "content" : "I LOVE GATORADE!",
     "userId" : "67e9b2cf929242eb614074af",
     "username" : "User5g9fdw"
 }
@@ -86,23 +86,23 @@ POST http://localhost:8081/comments/createComment
 Content-Type: application/json
 
 {
-    "postID": "67ed73097181e27855a90578",
+    "postID": "67edb6cb32b701692faa3ca5",
     "userID": "67e9b2cf929242eb614074af",
     "username": "User5g9fdw",
-    "content": "Test comment :)",
+    "content": "hey comment :)",
     "parentComment": null
 }
 
 ### Get all comments
-GET http://localhost:8081/comments/getComment
+GET http://localhost:8081/comments
 Content-Type: application/json
 
 ### Get comments by post ID
-GET http://localhost:8081/comments/post/67ed73097181e27855a90578
+GET http://localhost:8081/comments/post/67edb6cb32b701692faa3ca5
 Content-Type: application/json
 
 ### Get a specific comment by its ID
-GET http://localhost:8081/comments/getComment/60b8d295f1e2a3d1c4c912e7
+GET http://localhost:8081/comments/67edb6d932b701692faa3ca9
 Content-Type: application/json
 
 
@@ -114,6 +114,9 @@ Content-Type: application/json
     "content": "Updated comment content"
 }
 
-###
-DELETE http://localhost:8081/comments/deleteComment/67ed7249c172842f1cd8a387
+### Delete a specific comment by its ID
+DELETE http://localhost:8081/comments/deleteComment/67edb6d932b701692faa3ca9
 Content-Type: application/json
+
+### Delete ALL comments
+DELETE http://localhost:8081/comments/deleteAllComments
