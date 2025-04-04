@@ -10,12 +10,14 @@ const registerRoute = require("./routes/userSignUp");
 const getUserByIdRoute = require("./routes/userGetUserById");
 const editUser = require("./routes/userEditUser");
 const userDeleteUser = require("./routes/userDeleteUser");
-const postDeleteAll = require("./routes/posts/postDeleteAll");
 const createPost = require("./routes/posts/createPost");
+const getPost = require("./routes/posts/getPost");
 const updatePost = require("./routes/posts/updatePost");
+const deletePost = require("./routes/posts/deletePost");
 const createComment = require("./routes/comments/createComment");
-const updateComment = require("./routes/comments/updateComment");
 const getComment = require("./routes/comments/getComment");
+const updateComment = require("./routes/comments/updateComment");
+const deleteComment = require("./routes/comments/deleteComment");
 const dbConnection = require("./config/db.config");
 
 dotenv.config();
@@ -44,17 +46,16 @@ dbConnection()
     app.use("/user", makeUserAnAdmin);
 
     // Post-related routes
-    app.use("/post", postDeleteAll);
-    app.use("/post", createPost);
-    app.use("/post", updatePost);
-
-    // Get all posts route
-    app.use(require("./routes/posts/post.getAllPosts"));
+    app.use("/posts", createPost);
+    app.use("/posts", getPost);
+    app.use("/posts", updatePost);
+    app.use("/posts", deletePost);
 
     // Comment routes
     app.use("/comments", createComment);
-    app.use("/comments", updateComment);
     app.use("/comments", getComment);
+    app.use("/comments", updateComment);
+    app.use("/comments", deleteComment);
 
     // Global error handler
     app.use((err, req, res, next) => {
