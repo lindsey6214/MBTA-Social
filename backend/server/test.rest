@@ -58,38 +58,55 @@ Content-Type: application/json
   "accessCode": "BlueLineIsTheBestLine12345"
 }
 
-###
-POST  http://localhost:8081/post/deleteAll
-
-###
-POST  http://localhost:8081/post/createPost
+### Create a post
+POST http://localhost:8081/posts/createPost
 Content-Type: application/json
 
 {
-    "content" : "I LOVE GATORADE!",
+    "content" : "GO SOX!",
     "userId" : "67e9b2cf929242eb614074af",
     "username" : "User5g9fdw"
 }
 
-###
-PUT http://localhost:8081/post/updatePost/67ed6b9390ee02a3b7f793b3
+### Get all posts
+GET http://localhost:8081/posts/
+Content-Type: application/json
+
+### Get posts made by a specific user by user ID
+GET http://localhost:8081/posts/user/67e9b2cf929242eb614074af
+Content-Type: application/json
+
+### Get post by post ID
+GET http://localhost:8081/posts/67ef0408f7531863f6aa0004
+Content-Type: application/json
+
+### Update post by post ID
+PUT http://localhost:8081/posts/updatePost/67ef2c0dbc19694284ff1f32
 Content-Type: application/json
 
 {
-    "content": "updated content",
+    "content": "updated sox",
     "isSensitive": true,
     "hasOffensiveText": false
 }
 
-###
+### Delete a specific post by post ID
+DELETE http://localhost:8081/posts/deletePost/67ef024deeaef67043af55bf
+Content-Type: application/json
+
+### Delete ALL posts
+DELETE http://localhost:8081/posts/deleteAllPosts
+Content-Type: application/json
+
+### Create a comment
 POST http://localhost:8081/comments/createComment
 Content-Type: application/json
 
 {
-    "postID": "67edb6cb32b701692faa3ca5",
+    "postID": "67ef2c0dbc19694284ff1f32",
     "userID": "67e9b2cf929242eb614074af",
     "username": "User5g9fdw",
-    "content": "hey comment :)",
+    "content": "fenwayyyyy :)",
     "parentComment": null
 }
 
@@ -101,21 +118,21 @@ Content-Type: application/json
 GET http://localhost:8081/comments/post/67edb6cb32b701692faa3ca5
 Content-Type: application/json
 
-### Get a specific comment by its ID
+### Get a specific comment by comment ID
 GET http://localhost:8081/comments/67edb6d932b701692faa3ca9
 Content-Type: application/json
 
 
-###
-PUT http://localhost:8081/comments/updateComment/67ed6b9390ee02a3b7f793b3
+### Update comment by comment ID
+PUT http://localhost:8081/comments/updateComment/67ef2c2fbc19694284ff1f38
 Content-Type: application/json
 
 {
-    "content": "Updated comment content"
+    "content": "Updated fenway!"
 }
 
-### Delete a specific comment by its ID
-DELETE http://localhost:8081/comments/deleteComment/67edb6d932b701692faa3ca9
+### Delete a specific comment by comment ID
+DELETE http://localhost:8081/comments/deleteComment/67eeffca6e54f867372a82d1
 Content-Type: application/json
 
 ### Delete ALL comments
