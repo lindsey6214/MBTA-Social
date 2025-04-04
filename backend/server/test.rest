@@ -103,7 +103,7 @@ POST http://localhost:8081/comments/createComment
 Content-Type: application/json
 
 {
-    "postID": "67ef2c0dbc19694284ff1f32",
+    "postID": "67f0151cd0bab9f6e3b892af",
     "userID": "67e9b2cf929242eb614074af",
     "username": "User5g9fdw",
     "content": "fenwayyyyy :)",
@@ -115,7 +115,7 @@ GET http://localhost:8081/comments
 Content-Type: application/json
 
 ### Get comments by post ID
-GET http://localhost:8081/comments/post/67edb6cb32b701692faa3ca5
+GET http://localhost:8081/comments/post/67f0151cd0bab9f6e3b892af
 Content-Type: application/json
 
 ### Get a specific comment by comment ID
@@ -161,4 +161,32 @@ Content-Type: application/json
 
 ### Check if user liked a post
 GET http://localhost:8081/likes/67ed66004c5bc5fd51ee59a1/67e9b2cf929242eb614074af
+Content-Type: application/json
+
+
+### Follow/Unfollow trainline/user
+
+### Follow a User
+POST http://localhost:8081/follow/user/USER_ID
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+### Unfollow a User
+POST http://localhost:8081/unfollow/user/USER_ID
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+### Follow a Train Line
+POST http://localhost:8081/follow/line/TRAINLINE_ID
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+### Unfollow a Train Line
+POST http://localhost:8081/unfollow/line/TRAINLINE_ID
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+### Get Following Users & Train Lines
+GET http://localhost:8081/following
+Authorization: Bearer YOUR_ACCESS_TOKEN
 Content-Type: application/json
