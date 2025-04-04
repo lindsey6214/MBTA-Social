@@ -61,7 +61,7 @@ dbConnection()
     app.use("/comments", createComment);
     app.use("/comments", getComment);
     app.use("/comments", updateComment);
-    app.use("/comments", getComment);
+    app.use("/comments", deleteComment);
     
     app.use("/likes", addLike);
     app.use("/likes", removeLike);

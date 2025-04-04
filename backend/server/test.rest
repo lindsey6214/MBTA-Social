@@ -135,6 +135,9 @@ Content-Type: application/json
 DELETE http://localhost:8081/comments/deleteComment/67eeffca6e54f867372a82d1
 Content-Type: application/json
 
+### Delete ALL comments
+DELETE http://localhost:8081/comments/deleteAllComments
+
 ### Add a like
 POST http://localhost:8081/likes/
 Content-Type: application/json
