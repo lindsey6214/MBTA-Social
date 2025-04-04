@@ -14,9 +14,8 @@ const newUserValidation = (data) => {
       )
       .trim(),
     birthdate: z
-      .string()
-      .refine((date) => {
-        const birthDateObj = new Date(date);
+      .coerce.date()
+      .refine((birthDateObj) => {
         const today = new Date();
         const minAgeDate = new Date(
           today.getFullYear() - 13,
