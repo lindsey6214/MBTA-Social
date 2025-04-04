@@ -27,7 +27,7 @@ router.post("/createComment", async (req, res) => {
       userID,
       username,
       content,
-      parentComment,
+      parentComment: parentComment || null,
     });
 
     // Save to database
