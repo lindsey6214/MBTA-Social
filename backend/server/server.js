@@ -19,11 +19,18 @@ const getComment = require("./routes/comments/getComment");
 const updateComment = require("./routes/comments/updateComment");
 const deleteComment = require("./routes/comments/deleteComment");
 const dbConnection = require("./config/db.config");
+const addLike = require("./routes/likes/addLike");
+const removeLike = require("./routes/likes/removeLike");
+const getLikesByPost = require("./routes/likes/getLikesByPost");
+const getUsersWhoLikedPost = require("./routes/likes/getUsersWhoLikedPost");
+const checkIfUserLiked = require("./routes/likes/checkIfUserLiked");
+
 const followTrainLine = require("./routes/following/followTrainLine");
 const followUser = require("./routes/following/followUser");
 const getFollowing = require("./routes/following/getFollowing");
 const unfollowTrainLine = require("./routes/following/unfollowTrainLine");
 const unfollowUser = require("./routes/following/unfollowUser");
+
 
 dotenv.config();
 
@@ -61,13 +68,14 @@ dbConnection()
     app.use("/comments", getComment);
     app.use("/comments", updateComment);
     app.use("/comments", deleteComment);
+    
+    app.use("/likes", addLike);
+    app.use("/likes", removeLike);
+    app.use("/likes", getLikesByPost);
+    app.use("/likes", getUsersWhoLikedPost);
+    app.use("/likes", checkIfUserLiked); 
 
-    // Following routes
-    app.use("/api", followTrainLine);
-    app.use("/api", followUser);
-    app.use("/api", getFollowing);
-    app.use("/api", unfollowTrainLine);
-    app.use("/api", unfollowUser);
+
 
     // Global error handler
     app.use((err, req, res, next) => {
