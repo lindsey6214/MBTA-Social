@@ -3,13 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  
   "scripts": {
-    "server": "nodemon server.js"
-  },
+  "start": "node server.js",
+  "dev": "nodemon npserver.js"
+  } ,
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Tochey/User_Service.git"
   },
+
   "author": "user service team",
   "license": "ISC",
   "bugs": {

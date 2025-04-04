@@ -17,6 +17,12 @@ const createComment = require("./routes/comments/createComment");
 const updateComment = require("./routes/comments/updateComment");
 const getComment = require("./routes/comments/getComment");
 const dbConnection = require("./config/db.config");
+const addLike = require("./routes/likes/addLike");
+const removeLike = require("./routes/likes/removeLike");
+const getLikesByPost = require("./routes/likes/getLikesByPost");
+const getUsersWhoLikedPost = require("./routes/likes/getUsersWhoLikedPost");
+const checkIfUserLiked = require("./routes/likes/checkIfUserLiked");
+
 
 dotenv.config();
 
@@ -55,6 +61,14 @@ dbConnection()
     app.use("/comments", createComment);
     app.use("/comments", updateComment);
     app.use("/comments", getComment);
+    
+    app.use("/likes", addLike);
+    app.use("/likes", removeLike);
+    app.use("/likes", getLikesByPost);
+    app.use("/likes", getUsersWhoLikedPost);
+    app.use("/likes", checkIfUserLiked); 
+
+
 
     // Global error handler
     app.use((err, req, res, next) => {
