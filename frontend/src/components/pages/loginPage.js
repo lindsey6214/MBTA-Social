@@ -11,13 +11,17 @@ const url = `${process.env.REACT_APP_BACKEND_SERVER_URI}/user/login`;
 
 const Login = () => {
   const [user, setUser] = useState(null);
-  const [data, setData] = useState({ email: "", password: "" }); // Changed username → email
+  const [data, setData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [lightMode, setLightMode] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setUser(getUserInfo());
+    const userInfo = getUserInfo();
+    if (!userInfo) {
+      localStorage.removeItem("accessToken");
+    }
+    setUser(userInfo);
   }, []);
 
   useEffect(() => {
