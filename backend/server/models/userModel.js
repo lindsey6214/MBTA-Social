@@ -38,6 +38,8 @@ const userSchema = new mongoose.Schema({
       message: "Users must be at least 13 years old to sign up.",
     },
   },
+  followingUsers: [{type: mongoose.schema.Types.ObjectId, ref: "User"}],
+  followingLines: [{type: mongoose.Schema.Types.ObjectId, ref: "TrainLine"}],
 });
 
 const User = mongoose.model("User", userSchema);
