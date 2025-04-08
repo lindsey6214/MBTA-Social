@@ -1,51 +1,88 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import getUserInfo from '../../utilities/decodeJwt';
+import axios from 'axios';
+import { FaHome, FaUser, FaBell, FaEnvelope, FaHashtag, FaBookmark, FaUsers, FaCrown, FaBolt, FaUserCircle, FaEllipsisH, FaFeatherAlt } from 'react-icons/fa';
 
 const HomePage = () => {
-    const [user, setUser] = useState(null);
-    const navigate = useNavigate();
+  const [posts, setPosts] = useState([]);
 
-    useEffect(() => {
-        setUser(getUserInfo());
-    }, []);
+  useEffect(() => {
+    axios.get('http://localhost:8081/posts/')
+      .then(response => {
+        setPosts(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching posts:', error);
+      });
+  }, []);
 
-    const handleLogout = () => {
-        localStorage.removeItem('accessToken');
-        navigate('/');
-    };
-
-    if (!user) {
-        return (
-            <div className="text-center mt-4">
-                <h4>Log in to view this page.</h4>
-            </div>
-        );
-    }
-
-    const { id, email, username } = user;
-
-    return (
-        <div className="container text-center mt-4">
-            <div className="card-container d-flex flex-column align-items-center">
-                <div className="card p-3 mb-3" style={{ width: '25rem' }}>
-                    <h3>Welcome</h3>
-                    <p className="username">{username}</p>
-                </div>
-                <div className="card p-3 mb-3" style={{ width: '25rem' }}>
-                    <h3>Your User ID in MongoDB</h3>
-                    <p className="userId">{id}</p>
-                </div>
-                <div className="card p-3 mb-3" style={{ width: '25rem' }}>
-                    <h3>Your Email</h3>
-                    <p className="email">{email}</p>
-                </div>
-            </div>
-            <button className="btn btn-danger mt-3" onClick={handleLogout}>
-                Log Out
-            </button>
+  return (
+    <div className="flex h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-yellow-400 text-white">
+      {/* Sidebar */}
+      <div className="w-1/5 flex flex-col justify-between py-6 px-4">
+        <div className="space-y-6">
+          <FaFeatherAlt className="text-3xl mb-4" />
+          <div className="space-y-4">
+            <NavItem icon={<FaHome />} label="Home" />
+            <NavItem icon={<FaHashtag />} label="Explore" />
+            <NavItem icon={<FaBell />} label="Notifications" />
+            <NavItem icon={<FaEnvelope />} label="Messages" />
+            <NavItem icon={<FaBookmark />} label="Bookmarks" />
+            <NavItem icon={<FaUsers />} label="Communities" />
+            <NavItem icon={<FaCrown />} label="Premium" />
+            <NavItem icon={<FaBolt />} label="Verified Orgs" />
+            <NavItem icon={<FaUser />} label="Profile" />
+            <NavItem icon={<FaEllipsisH />} label="More" />
+          </div>
+          <button className="mt-6 bg-white text-purple-600 font-bold py-2 rounded-full w-full hover:bg-gray-100 transition">Post</button>
         </div>
-    );
+
+        {/* User Profile */}
+        <div className="flex items-center space-x-2">
+          <img
+            src="https://i.imgur.com/QCNbOAo.png" // example profile picture
+            alt="Profile"
+            className="w-10 h-10 rounded-full"
+          />
+          <div>
+            <div className="font-semibold leading-tight">FIX THIS</div>
+            <div className="text-sm text-white/80">@FIX THIS</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Feed */}
+      <div className="flex-1 overflow-y-scroll px-8 py-6 space-y-6">
+        <div className="bg-white/20 p-4 rounded-2xl backdrop-blur-sm">
+          <textarea
+            placeholder="What’s happening?"
+            className="w-full p-2 rounded-lg text-black"
+            rows="3"
+          />
+          <div className="flex justify-end mt-2">
+            <button className="bg-white text-purple-600 font-bold px-4 py-2 rounded-full hover:bg-gray-100 transition">Post</button>
+          </div>
+        </div>
+
+        {/* Posts */}
+        {posts.map(post => (
+          <div key={post._id} className="bg-white/20 p-4 rounded-2xl backdrop-blur-sm">
+            <div className="flex items-center space-x-2">
+              <FaUserCircle className="text-xl" />
+              <div className="font-semibold">{post.username}</div>
+            </div>
+            <p className="mt-2 text-white text-lg">{post.content}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };
+
+const NavItem = ({ icon, label }) => (
+  <div className="flex items-center space-x-3 text-lg cursor-pointer hover:font-bold transition">
+    <div>{icon}</div>
+    <span>{label}</span>
+  </div>
+);
 
 export default HomePage;
