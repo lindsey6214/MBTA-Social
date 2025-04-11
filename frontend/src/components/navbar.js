@@ -27,29 +27,36 @@ export default function Navbar() {
 
   return (
     <>
-    <ReactNavbar className="navbar-custom">
-      <Container>
-        <Nav className="me-auto">
-          {user ? (
-            <>
-              <Nav.Link
-                  as="button"
-                  className="nav-link btn-link"
-                  onClick={() => setShowLogoutModal(true)}
-                >
-                  Logout
-                </Nav.Link>
+      <ReactNavbar className="navbar-custom" expand="lg">
+        <Container fluid className="d-flex justify-content-between align-items-center">
+          {/* Left section: login/signup or logout */}
+          <Nav className="flex-grow-1">
+            {!user ? (
+              <>
+                <Nav.Link href="/login" className="nav-link">Login</Nav.Link>
+                <Nav.Link href="/signup" className="nav-link">Sign Up</Nav.Link>
               </>
-                    ) : (
-                      <>
-                        <Nav.Link href="/login" className="nav-link">Login</Nav.Link>
-                        <Nav.Link href="/signup" className="nav-link">Sign Up</Nav.Link>
-                      </>
-                    )}
-              </Nav>
+            ) : (
+              <Nav.Link
+                as="button"
+                className="nav-link btn-link"
+                onClick={() => setShowLogoutModal(true)}
+              >
+                Logout
+              </Nav.Link>
+            )}
+          </Nav>
 
-          <Nav className="ms-auto">
-            {user ? (
+          {/* Center section: App name */}
+          <div className="text-center flex-grow-1">
+            <ReactNavbar.Brand href="/" className="mx-auto fw-bold text-black fs-4">
+              MyApp
+            </ReactNavbar.Brand>
+          </div>
+
+          {/* Right section: profile image */}
+          <Nav className="flex-grow-1 justify-content-end">
+            {user && (
               <Nav.Link href="/profile" className="nav-link d-flex align-items-center">
                 {user.profileImage ? (
                   <img
@@ -62,10 +69,10 @@ export default function Navbar() {
                   <FaUserCircle size={28} />
                 )}
               </Nav.Link>
-            ) : null}
-        </Nav>
-      </Container>
-    </ReactNavbar>
+            )}
+          </Nav>
+        </Container>
+      </ReactNavbar>
 
         <Modal 
         show={showLogoutModal} 
