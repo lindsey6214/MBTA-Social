@@ -21,7 +21,6 @@ export default function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setUser(null);
     window.location.href = "/";
   };
 
@@ -29,10 +28,10 @@ export default function Navbar() {
     <>
       <ReactNavbar className="navbar-custom" expand="lg">
         <Container fluid className="d-flex justify-content-between align-items-center">
-          {/* Left section: login/signup or logout */}
           <Nav className="flex-grow-1">
             {!user ? (
               <>
+                <Nav.Link href="/home" className="nav-link">Home</Nav.Link>
                 <Nav.Link href="/login" className="nav-link">Login</Nav.Link>
                 <Nav.Link href="/signup" className="nav-link">Sign Up</Nav.Link>
               </>
@@ -49,7 +48,7 @@ export default function Navbar() {
 
           {/* Center section: App name */}
           <div className="text-center flex-grow-1">
-            <ReactNavbar.Brand href="/" className="mx-auto fw-bold text-black fs-4">
+            <ReactNavbar.Brand href="/" className="navbar-brand">
               MyApp
             </ReactNavbar.Brand>
           </div>
