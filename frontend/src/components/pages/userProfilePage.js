@@ -36,6 +36,9 @@ const UserProfile = () => {
     setEditMode(false);
   };
 
+  if (!user) return <div>Loading...</div>;
+
+
   return (
     <div className="main-container">
 

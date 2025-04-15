@@ -29,9 +29,10 @@ export default function Navbar() {
       <ReactNavbar className="navbar-custom" expand="lg">
         <Container fluid className="d-flex justify-content-between align-items-center">
           <Nav className="flex-grow-1">
+            <Nav.Link href="/home" className="nav-link">Home</Nav.Link>
+            
             {!user ? (
               <>
-                <Nav.Link href="/home" className="nav-link">Home</Nav.Link>
                 <Nav.Link href="/login" className="nav-link">Login</Nav.Link>
                 <Nav.Link href="/signup" className="nav-link">Sign Up</Nav.Link>
               </>
@@ -46,14 +47,12 @@ export default function Navbar() {
             )}
           </Nav>
 
-          {/* Center section: App name */}
           <div className="text-center flex-grow-1">
-            <ReactNavbar.Brand href="/" className="navbar-brand">
+            <ReactNavbar.Brand href="/home" className="navbar-brand">
               MyApp
             </ReactNavbar.Brand>
           </div>
 
-          {/* Right section: profile image */}
           <Nav className="flex-grow-1 justify-content-end">
             {user && (
               <Nav.Link href="/profile" className="nav-link d-flex align-items-center">
