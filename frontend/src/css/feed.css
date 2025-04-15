@@ -1,0 +1,65 @@
+/* feed.css */
+
+.feed-container {
+    padding: 1.5rem 2rem;
+    overflow-y: auto;
+    width: 100%;
+    max-width: 2000px;
+    margin: 0 auto;
+  }
+  
+  .new-post-box {
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 1rem;
+    border-radius: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .new-post-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    resize: none;
+    border: none;
+    font-size: 1rem;
+    color: #000;
+  }
+  
+  .new-post-button {
+    margin-top: 0.5rem;
+    background-color: #fff;
+    color: #e3056c;
+    font-weight: bold;
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .new-post-button:hover {
+    background-color: #f3f4f6;
+  }
+  
+  .post-card {
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 1rem;
+    border-radius: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .post-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  
+  .post-content {
+    margin-top: 0.75rem;
+    font-size: 1.1rem;
+    color: #fff;
+  }
+  
