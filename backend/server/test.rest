@@ -2,9 +2,9 @@ POST http://localhost:8081/user/signup
 Content-Type: application/json 
 
 {
-    "email": "spraggins0602@gmail.com",
-    "password": "F0rtun3c00k!3",
-    "birthdate": "2004-06-02"
+    "email": "test@gmail.com",
+    "password": "Ilovepasta123!",
+    "birthdate": "2004-06-21"
 }
 
 ###
@@ -63,7 +63,7 @@ POST http://localhost:8081/posts/createPost
 Content-Type: application/json
 
 {
-    "content" : "GO SOX!",
+    "content" : "I love the Pats!",
     "userId" : "67e9b2cf929242eb614074af",
     "username" : "User5g9fdw"
 }
@@ -81,13 +81,11 @@ GET http://localhost:8081/posts/67ef0408f7531863f6aa0004
 Content-Type: application/json
 
 ### Update post by post ID
-PUT http://localhost:8081/posts/updatePost/67ef2c0dbc19694284ff1f32
+PUT http://localhost:8081/posts/updatePost/67fea005da7d1c0e75381331
 Content-Type: application/json
 
 {
-    "content": "updated sox",
-    "isSensitive": true,
-    "hasOffensiveText": false
+    "content": "hi"
 }
 
 ### Delete a specific post by post ID
@@ -103,10 +101,10 @@ POST http://localhost:8081/comments/createComment
 Content-Type: application/json
 
 {
-    "postID": "67f0151cd0bab9f6e3b892af",
+    "postID": "67fe995585e293167d1ef5be",
     "userID": "67e9b2cf929242eb614074af",
     "username": "User5g9fdw",
-    "content": "fenwayyyyy :)",
+    "content": "I hate the orange line",
     "parentComment": null
 }
 
@@ -124,11 +122,11 @@ Content-Type: application/json
 
 
 ### Update comment by comment ID
-PUT http://localhost:8081/comments/updateComment/67ef2c2fbc19694284ff1f38
+PUT http://localhost:8081/comments/updateComment/67fe9b0885e293167d1ef5d6
 Content-Type: application/json
 
 {
-    "content": "Updated fenway!"
+    "content": "I love the orange line!"
 }
 
 ### Delete a specific comment by comment ID

@@ -8,8 +8,7 @@ const newPostSchema = new mongoose.Schema(
     content: { type: String, required: true },
     imageUri: { type: String, label: "imageUri", required: false },
     date: { type: Date, default: Date.now },
-    isSensitive: { type: Boolean, default: false }, // New field
-    hasOffensiveText: {type: Boolean, default: false },
+    moderationFlag: { type: String, enum: ['clean', 'censored'], default: 'clean' },
   },
   { collection: "posts" }
 );
