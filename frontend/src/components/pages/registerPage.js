@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { FaTrain } from "react-icons/fa";
+import "../../css/landingLoginRegister.css";
 
 const PRIMARY_COLOR = "#cc5c99";
 const url = `${process.env.REACT_APP_BACKEND_SERVER_URI}/user/signup`;
@@ -33,72 +34,61 @@ const Register = () => {
   };
 
   return (
-    <section className="flex flex-col md:flex-row h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-yellow-400 text-white">
+    <section className="landing-container">
       {/* Left Side with Icon */}
-      <div className="md:w-1/2 flex justify-center items-center">
-        <FaTrain className="text-[200px] drop-shadow-2xl" />
+      <div className="landing-left">
+        <FaTrain className="train-icon" />
       </div>
 
       {/* Right Side with Form */}
-      <div className="md:w-1/2 flex flex-col justify-center items-center text-center px-8">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">Sign Up</h1>
-        <p className="text-lg md:text-xl font-medium mb-8">Create your account to get started.</p>
+      <div className="landing-right">
+      <div className="landing-text-group">
+        <h1 className="landing-heading">Sign Up</h1>
+        <p className="landing-subtext">Create your account to get started.</p>
 
-        <div className="w-full max-w-sm space-y-4">
+
           {/* Registration Form */}
-          <Form onSubmit={handleSubmit} className="space-y-4">
+          <Form onSubmit={handleSubmit} className="landing-right-form">
             <Form.Group className="mb-3">
-              <Form.Label style={{ fontWeight: "bold", color: "white" }}>
-                Email
-              </Form.Label>
-              <Form.Control
-                type="email"
-                name="email"
-                onChange={handleChange}
-                placeholder="Enter email"
-                required
-                style={{ color: "black", backgroundColor: "white" }} // White background, black text
-              />
-            </Form.Group>
+              <Form.Label style={{ fontWeight: "bold", color: "white" }}>Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  name="email"
+                  onChange={handleChange}
+                  placeholder="Enter email"
+                  required
+                  className="form-control"
+                  style={{ color: "black", backgroundColor: "white" }} // White background, black text
+                />
+              </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label style={{ fontWeight: "bold", color: "white" }}>
-                Password
-              </Form.Label>
-              <Form.Control
-                type="password"
-                name="password"
-                onChange={handleChange}
-                placeholder="Password"
-                required
-                style={{ color: "black", backgroundColor: "white" }} // White background, black text
-              />
-            </Form.Group>
+              <Form.Label style={{ fontWeight: "bold", color: "white" }}>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  name="password"
+                  onChange={handleChange}
+                  placeholder="Password"
+                  required
+                  className="form-control"
+                  style={{ color: "black", backgroundColor: "white" }} // White background, black text
+                />
+              </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label style={{ fontWeight: "bold", color: "white" }}>
-                Birthday
-              </Form.Label>
-              <Form.Control
-                type="date"
-                name="birthday"
-                onChange={handleChange}
-                required
-                style={{ color: "black", backgroundColor: "white" }} // White background, black text
-              />
-            </Form.Group>
+              <Form.Label style={{ fontWeight: "bold", color: "white" }}>Birthday</Form.Label>
+                <Form.Control
+                  type="date"
+                  name="birthday"
+                  onChange={handleChange}
+                  required
+                  className="form-control"
+                  style={{ color: "black", backgroundColor: "white" }} // White background, black text
+                />
+              </Form.Group>
 
             <Button
-              type="submit"
-              style={{
-                background: PRIMARY_COLOR,
-                border: "none",
-                width: "100%",
-              }}
-              className="mt-3"
-            >
-              Sign Up
-            </Button>
+              className="auth-button">Sign Up</Button>
           </Form>
 
           {/* Login Link */}
@@ -110,6 +100,7 @@ const Register = () => {
           </div>
         </div>
       </div>
+
 
       {/* Error Modal */}
       <Modal show={showErrorModal} onHide={() => setShowErrorModal(false)} centered>
