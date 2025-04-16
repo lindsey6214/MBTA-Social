@@ -46,4 +46,22 @@ router.get("/:postID", async (req, res) => {
     }
 });
 
+//get posts by train line ID
+router.get("/trainline/:lineId", async (req, res) => {
+    const { lineId } = req.params;
+  
+    try {
+      const posts = await Post.find({ trainLineId: lineId }).sort({ date: -1 });
+  
+      if (!posts.length) {
+        return res.status(404).json({ message: "No posts found for this train line" });
+      }
+  
+      return res.status(200).json(posts);
+    } catch (error) {
+      console.error("Error fetching posts for train line:", error);
+      return res.status(500).json({ error: "Server error" });
+    }
+  });
+
 module.exports = router;

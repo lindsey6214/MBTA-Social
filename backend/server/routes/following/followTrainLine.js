@@ -51,10 +51,13 @@ router.post("/following/line/:lineId", async (req, res) => {
       params: { "filter[route]": lineId, api_key: API_KEY },
     });
 
+    const posts = await Post.find({ trainLineId: lineId }).sort({ date: -1 });
+
     res.status(200).json({
       message: "Train line followed successfully!",
       schedule: scheduleResponse.data.data,
       alerts: alertsResponse.data.data,
+      posts, //new
     });
   } catch (error) {
     res.status(500).json({ message: "Error following train line", error: error.message });

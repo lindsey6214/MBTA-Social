@@ -69,6 +69,7 @@ Content-Type: application/json
     "content" : "GO SOX!",
     "userId" : "67e9b2cf929242eb614074af",
     "username" : "User5g9fdw"
+    "trainLineId": "Red"   // Optional: remove or change this to attach to a line
 }
 
 ### Get all posts
@@ -92,6 +93,10 @@ Content-Type: application/json
     "isSensitive": true,
     "hasOffensiveText": false
 }
+
+### Get Posts for Red Line
+GET http://localhost:3000/posts/trainline/Red
+
 
 ### Delete a specific post by post ID
 DELETE http://localhost:8081/posts/deletePost/67ef024deeaef67043af55bf

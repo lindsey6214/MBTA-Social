@@ -5,7 +5,7 @@ const User = require("../../models/userModel");
 
 // Create a new post
 router.post("/createPost", async (req, res) => {
-  const { userId, content, imageUri, isSensitive, hasOffensiveText, username } = req.body;
+  const { userId, content, imageUri, isSensitive, hasOffensiveText, username, trainLineId } = req.body;
 
   try {
     // Check if the username exists in the database
@@ -22,6 +22,7 @@ router.post("/createPost", async (req, res) => {
       imageUri,
       isSensitive,
       hasOffensiveText,
+      trainLineId, // NEW
     });
 
     // Save to database

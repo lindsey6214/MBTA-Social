@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const newPostSchema = new mongoose.Schema(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "users", required: true },
+    trainLineId: { type: String, required: false },
     username: { type: String, required: true },
     content: { type: String, required: true },
     imageUri: { type: String, label: "imageUri", required: false },
