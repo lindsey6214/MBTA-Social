@@ -10,6 +10,8 @@ const newPostSchema = new mongoose.Schema(
     date: { type: Date, default: Date.now },
     isSensitive: { type: Boolean, default: false }, // New field
     hasOffensiveText: {type: Boolean, default: false },
+    location: {type: String,  required: false},
+    
   },
   { collection: "posts" }
 );
