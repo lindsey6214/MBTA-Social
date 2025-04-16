@@ -185,7 +185,7 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 Content-Type: application/json
 
 ### Follow Red Line
-POST http://localhost:3000/following/line/Red
+POST http://localhost:8081/following/line/Red
 Content-Type: application/json
 
 {
@@ -193,7 +193,7 @@ Content-Type: application/json
 }
 
 ### Unfollow Red Line
-POST http://localhost:3000/unfollow/line/Red
+POST http://localhost:8081/unfollow/line/Red
 Content-Type: application/json
 
 {
