@@ -4,7 +4,6 @@ const dotenv = require("dotenv");
 const morgan = require("morgan");
 const path = require("path");
 const bookmarkRoutes = require("./routes/bookmarks/bookmarkRoutes");
-const notificationRoutes = require("./routes/notifications/notificationRoutes");
 //const exploreRoutes = require("./routes/explore/exploreRoutes");
 const exploreRoutes = require("./routes/exploreRoutes");
 
@@ -37,7 +36,6 @@ dbConnection()
     app.use("/posts", require("./routes/posts/createPost"));
     app.use("/posts", require("./routes/posts/getPost"));
     app.use("/bookmarks", bookmarkRoutes);
-    app.use("/notifications", notificationRoutes); // ✅ Notifications route
     app.use("/explore", exploreRoutes); // ✅ Explore route
   
 
