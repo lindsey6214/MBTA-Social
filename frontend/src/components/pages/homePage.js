@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import {
-  FaHome, FaUser, FaBell, FaEnvelope, FaHashtag, FaBookmark,
+  FaHome, FaBell, FaEnvelope, FaHashtag, FaBookmark,
   FaUserCircle, FaEllipsisH, FaFeatherAlt
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
@@ -23,11 +23,10 @@ const HomePage = () => {
   const fetchPosts = useCallback(() => {
     axios.get('http://localhost:8081/posts/')
       .then(response => {
-        const userPosts = response.data.filter(post => post.username === user.username);
-        setPosts(userPosts);
+        setPosts(response.data); // Show all posts
       })
       .catch(error => console.error('Error fetching posts:', error));
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     if (user) fetchPosts();
@@ -90,7 +89,6 @@ const HomePage = () => {
               <NavItem icon={<FaEnvelope />} label="Messages" />
             </Link>
             <NavItem icon={<FaBookmark />} label="Bookmarks" />
-            <NavItem icon={<FaUser />} label="Profile" />
             <NavItem icon={<FaEllipsisH />} label="More" />
           </div>
         </div>
