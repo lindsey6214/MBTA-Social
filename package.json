@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "geolib": "^3.3.4",
+    "openai": "^4.94.0"
+  }
+}

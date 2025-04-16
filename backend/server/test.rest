@@ -10,7 +10,7 @@ Content-Type: application/json
     "birthdate": "2004-06-02"
 }
 
-###
+### log in
 POST http://localhost:8081/user/login
 Content-Type: application/json 
 
@@ -189,7 +189,7 @@ POST http://localhost:3000/following/line/Red
 Content-Type: application/json
 
 {
-  "userId": "YOUR_USER_ID_HERE"
+  "userId": "67e9b2cf929242eb614074af"
 }
 
 ### Unfollow Red Line
