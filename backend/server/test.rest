@@ -1,3 +1,6 @@
+##api integration
+@baseUrl = http://localhost:3000/api/trainlines
+
 POST http://localhost:8081/user/signup
 Content-Type: application/json 
 
@@ -176,15 +179,21 @@ POST http://localhost:8081/unfollow/user/USER_ID
 Authorization: Bearer YOUR_ACCESS_TOKEN
 Content-Type: application/json
 
-### Follow a Train Line
-POST http://localhost:8081/follow/line/TRAINLINE_ID
-Authorization: Bearer YOUR_ACCESS_TOKEN
+### Follow Red Line
+POST http://localhost:3000/following/line/Red
 Content-Type: application/json
 
-### Unfollow a Train Line
-POST http://localhost:8081/unfollow/line/TRAINLINE_ID
-Authorization: Bearer YOUR_ACCESS_TOKEN
+{
+  "userId": "YOUR_USER_ID_HERE"
+}
+
+### Unfollow Red Line
+POST http://localhost:3000/unfollow/line/Red
 Content-Type: application/json
+
+{
+  "userId": "YOUR_USER_ID_HERE"
+}
 
 ### Get Following Users & Train Lines
 GET http://localhost:8081/following

@@ -2,46 +2,63 @@ const express = require("express");
 const axios = require("axios");
 const User = require("../../models/userModel");
 const TrainLine = require("../../models/trainLineModel");
-const { getTrainLines } = require('./trainLineModel');
-const followerModel = require('./followerModel');
-const followingModel = require('./followingModel');
 
 const router = express.Router();
-const MBTA_API_BASE = 'https://api-v3.mbta.com'
+const MBTA_API_BASE = 'https://api-v3.mbta.com';
+const API_KEY = process.env.MBTA_API_KEY;
 
 router.post("/following/line/:lineId", async (req, res) => {
-    try {
-      const { lineId } = req.params;
-      const { userId } = req.body; // Pass user ID in request body
+  try {
+    const { lineId } = req.params;
+    const { userId } = req.body;
 
-      const currentUser = await User.findById(userId);
-      if (!currentUser) return res.status(404).json({ message: "User not found" });
+    const currentUser = await User.findById(userId);
+    if (!currentUser) return res.status(404).json({ message: "User not found" });
 
-      const trainLine = await TrainLine.findOne({ mbtaId: lineId });
-      if (!trainLine) return res.status(404).json({ message: "Train line not found" });
+    let trainLine = await TrainLine.findOne({ mbtaId: lineId });
 
-      if (!currentUser.followingLines.includes(lineId)) {
-        currentUser.followingLines.push(lineId);
-        await currentUser.save();
+    if (!trainLine) {
+      const mbtaResponse = await axios.get(`${MBTA_API_BASE}/routes/${lineId}`, {
+        params: { api_key: API_KEY },
+      });
+
+      if (!mbtaResponse.data.data) {
+        return res.status(404).json({ message: "Train line not found in MBTA API" });
       }
-      // fetch shcedule from api
-      const scheduleResponse = await axios.get(`${MBTA_API_BASE}/schedules,`{
-        params: {"filter[route]": lineId, "page[limit]": 10},
-      });
-      // fetch alerts from api
-      const alertsResponse = await axios.get(`${MBTA_API_BASE}/alerts`, {
-        params: {"filter[rout]": lineID},
-      });
-      const schedules = scheduleResponse.data.data;
-      const alerts = alertsResponse.data.data;
 
-      res.status(200).json({ message: "Train line followed successfully!",
-        schedule: schedules,
-        alerts: alerts,
-       });
-    } catch (error) {
-      res.status(500).json({ message: "Error following train line", error: error.message });
+      const attributes = mbtaResponse.data.data.attributes;
+
+      trainLine = new TrainLine({
+        mbtaId: lineId,
+        name: attributes.long_name,
+        color: attributes.color,
+        type: attributes.type,
+      });
+
+      await trainLine.save();
     }
+
+    if (!currentUser.followingLines.includes(lineId)) {
+      currentUser.followingLines.push(lineId);
+      await currentUser.save();
+    }
+
+    const scheduleResponse = await axios.get(`${MBTA_API_BASE}/schedules`, {
+      params: { "filter[route]": lineId, "page[limit]": 10, api_key: API_KEY },
+    });
+
+    const alertsResponse = await axios.get(`${MBTA_API_BASE}/alerts`, {
+      params: { "filter[route]": lineId, api_key: API_KEY },
+    });
+
+    res.status(200).json({
+      message: "Train line followed successfully!",
+      schedule: scheduleResponse.data.data,
+      alerts: alertsResponse.data.data,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error following train line", error: error.message });
+  }
 });
 
 module.exports = router;
