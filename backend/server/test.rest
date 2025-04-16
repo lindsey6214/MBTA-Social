@@ -193,11 +193,11 @@ Content-Type: application/json
 }
 
 ### Unfollow Red Line
-POST http://localhost:8081/unfollow/line/Red
+POST http://localhost:8081/following/unfollow/line/Red
 Content-Type: application/json
 
 {
-  "userId": "YOUR_USER_ID_HERE"
+  "userId": "67e9b2cf929242eb614074af"
 }
 
 ### Get Following Users & Train Lines
