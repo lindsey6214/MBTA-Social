@@ -175,7 +175,7 @@ Content-Type: application/json
 ### Follow/Unfollow trainline/user
 
 ### Follow a User
-POST http://localhost:8081/follow/user/USER_ID
+POST http://localhost:8081/follow/user/67f69f431a0c52207d64ae78
 Authorization: Bearer YOUR_ACCESS_TOKEN
 Content-Type: application/json
 
