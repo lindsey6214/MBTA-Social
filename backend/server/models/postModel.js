@@ -11,7 +11,7 @@ const newPostSchema = new mongoose.Schema(
     isSensitive: { type: Boolean, default: false }, // New field
     hasOffensiveText: {type: Boolean, default: false },
     location: {type: String,  required: false},
-    
+    moderationFlag: { type: String, enum: ['clean', 'censored'], default: 'clean' },
   },
   { collection: "posts" }
 );
