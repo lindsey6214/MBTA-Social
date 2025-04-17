@@ -29,12 +29,12 @@ Content-Type: application/json
   "accessCode": "BlueLineIsTheBestLine12345"
 }
 
-###
+### get all users
 GET http://localhost:8081/user/getAll
 access-code: BlueLineIsTheBestLine12345
 Content-Type: application/json
 
-###
+### edit user
 POST http://localhost:8081/user/editUser
 Content-Type: application/json 
 
@@ -43,16 +43,16 @@ Content-Type: application/json
     "username" : "Userf8u2sf",
     "password" : "Tochi12345!"
 }
-
-###
+ 
+### get user by id
 GET  http://localhost:8081/user/getUserById
 Content-Type: application/json 
 
 {
-    "userId" : ""
+    "userId" : "67e9b2cf929242eb614074af"
 }
 
-###
+### delete user by email
 DELETE http://localhost:8081/user/deleteUserByEmail
 Content-Type: application/json
 

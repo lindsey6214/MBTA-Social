@@ -35,9 +35,14 @@ router.post("/unfollow/line/:lineId", async (req, res) => {
 
  // Filter out the line from user's following list
  const originalCount = currentUser.followingLines.length;
- currentUser.followingLines = currentUser.followingLines.filter(
-   (id) => id.toString() !== trainLineId
- );
+//  currentUser.followingLines = currentUser.followingLines.filter(
+//    (id) => id.toString() !== trainLineId
+//  );
+
+currentUser.followingLines = currentUser.followingLines.filter(
+  (id) => id.toString() !== trainLineId
+);
+
 
  // Save only if something changed
  if (currentUser.followingLines.length < originalCount) {
