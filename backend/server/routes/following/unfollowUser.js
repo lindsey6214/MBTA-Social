@@ -21,5 +21,13 @@ router.post("/unfollow/user/:userId", async (req, res) => {
       res.status(500).json({ message: "Error unfollowing user", error });
     }
 });
+const otherUser = await User.findById(userId);
+if (otherUser) {
+  otherUser.followingUsers = otherUser.followingUsers.filter(
+    (id) => id.toString() !== currentUserId
+  );
+  await otherUser.save();
+}
+
 
 module.exports = router;

@@ -36,6 +36,9 @@ router.post("/createPost", upload.single("media"), async (req, res) => {
       username,
       content,
       imageUri,
+      isSensitive,
+      hasOffensiveText,
+      trainLineId, // NEW
     });
 
     const savedPost = await newPost.save();

@@ -6,6 +6,8 @@ const path = require("path");
 const bookmarkRoutes = require("./routes/bookmarks/bookmarkRoutes");
 //const exploreRoutes = require("./routes/explore/exploreRoutes");
 const exploreRoutes = require("./routes/exploreRoutes");
+const followRequestUser = require("./routes/following/followRequestUser");
+const removeFollower = require("./routes/following/removeFollower");
 
 
 dotenv.config();
@@ -38,6 +40,44 @@ dbConnection()
     app.use("/bookmarks", bookmarkRoutes);
     app.use("/explore", exploreRoutes); // ✅ Explore route
   
+    app.use(morgan("dev")); // Logs HTTP requests
+
+    // User-related routes
+    app.use("/user", loginRoute);
+    app.use("/user", registerRoute);
+    app.use("/user", getAllUsersRoute);
+    app.use("/user", getUserByIdRoute);
+    app.use("/user", editUser);
+    app.use("/user", userDeleteUser);
+    app.use("/user", makeUserAnAdmin);
+
+    // Post-related routes
+    app.use("/posts", createPost);
+    app.use("/posts", getPost);
+    app.use("/posts", updatePost);
+    app.use("/posts", deletePost);
+
+    // Comment routes
+    app.use("/comments", createComment);
+    app.use("/comments", getComment);
+    app.use("/comments", updateComment);
+    app.use("/comments", deleteComment);
+    
+    app.use("/likes", addLike);
+    app.use("/likes", removeLike);
+    app.use("/likes", getLikesByPost);
+    app.use("/likes", getUsersWhoLikedPost);
+    app.use("/likes", checkIfUserLiked); 
+
+    // Follow routes
+    app.use("/following", followTrainLine);
+    app.use("/following", followUser);
+    app.use("/following", getFollowing);
+    app.use("/following", unfollowTrainLine);
+    app.use("/following", unfollowUser);
+    app.use("/following", followRequestUser);
+    app.use("/following", removeFollower);
+
 
     // Global error handler
     app.use((err, req, res, next) => {
