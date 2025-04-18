@@ -1,0 +1,35 @@
+  /* Main Content */
+  .main-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  
+  .profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+  }
+  
+  .change-picture-button, .save-button, .edit-button, .logout-button {
+    background-color: white;
+    color: rgb(254, 0, 220);
+    padding: 10px;
+    border-radius: 5px;
+    width: fit-content;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .change-picture-button:hover, .save-button:hover, .edit-button:hover, .logout-button:hover {
+    background-color: #fdb2f4;
+  }
+  
+  button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
