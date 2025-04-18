@@ -6,7 +6,7 @@ const path = require("path");
 const bookmarkRoutes = require("./routes/bookmarks/bookmarkRoutes");
 //const exploreRoutes = require("./routes/explore/exploreRoutes");
 const exploreRoutes = require("./routes/exploreRoutes");
-const followRequestUser = require("./routes/following/followRequestUser");
+const followRequestUser = require("./routes/following/followRequest");
 const removeFollower = require("./routes/following/removeFollower");
 
 
@@ -77,6 +77,9 @@ dbConnection()
     app.use("/following", unfollowUser);
     app.use("/following", followRequestUser);
     app.use("/following", removeFollower);
+
+    app.use("/messages", require("./routes/messageRoutes"));
+
 
 
     // Global error handler
