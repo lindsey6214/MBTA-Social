@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import getUserInfo from "../utilities/decodeJwt";
+import getUserInfo from "../../utilities/decodeJwt";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import ReactNavbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { FaUserCircle } from "react-icons/fa";
-import "../css/base.css";
+import "../../css/base.css";
 
 export default function Navbar() {
   const [user, setUser] = useState(null);
@@ -21,40 +21,35 @@ export default function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    setUser(null);
     window.location.href = "/";
   };
 
   return (
     <>
-      <ReactNavbar className="navbar-custom" expand="lg">
-        <Container fluid className="d-flex justify-content-between align-items-center">
-          <Nav className="flex-grow-1">
-            <Nav.Link href="/home" className="nav-link">Home</Nav.Link>
-            
-            {!user ? (
-              <>
-                <Nav.Link href="/login" className="nav-link">Login</Nav.Link>
-                <Nav.Link href="/signup" className="nav-link">Sign Up</Nav.Link>
-              </>
-            ) : (
+    <ReactNavbar className="navbar-custom">
+      <Container>
+        <Nav className="me-auto">
+          {user ? (
+            <>
               <Nav.Link
-                as="button"
-                className="nav-link btn-link"
-                onClick={() => setShowLogoutModal(true)}
-              >
-                Logout
-              </Nav.Link>
-            )}
-          </Nav>
+                  as="button"
+                  className="nav-link btn-link"
+                  onClick={() => setShowLogoutModal(true)}
+                >
+                  Logout
+                </Nav.Link>
+              </>
+                    ) : (
+                      <>
+                        <Nav.Link href="/login" className="nav-link">Login</Nav.Link>
+                        <Nav.Link href="/signup" className="nav-link">Sign Up</Nav.Link>
+                      </>
+                    )}
+              </Nav>
 
-          <div className="text-center flex-grow-1">
-            <ReactNavbar.Brand href="/home" className="navbar-brand">
-              MyApp
-            </ReactNavbar.Brand>
-          </div>
-
-          <Nav className="flex-grow-1 justify-content-end">
-            {user && (
+          <Nav className="ms-auto">
+            {user ? (
               <Nav.Link href="/profile" className="nav-link d-flex align-items-center">
                 {user.profileImage ? (
                   <img
@@ -67,10 +62,10 @@ export default function Navbar() {
                   <FaUserCircle size={28} />
                 )}
               </Nav.Link>
-            )}
-          </Nav>
-        </Container>
-      </ReactNavbar>
+            ) : null}
+        </Nav>
+      </Container>
+    </ReactNavbar>
 
         <Modal 
         show={showLogoutModal} 

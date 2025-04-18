@@ -4,7 +4,7 @@ import './css/card.css';
 import './index.css';
 
 
-import Navbar from "./components/navbar";
+import Navbar from "./components/pages/navbar";
 import LandingPage from "./components/pages/landingPage";
 import HomePage from "./components/pages/homePage";
 import Login from "./components/pages/loginPage";
