@@ -76,11 +76,19 @@ dbConnection()
     app.use("/likes", checkIfUserLiked); 
 
     // Follow routes
-    app.use("./following", followTrainLine);
-    app.use("./following", followUser);
-    app.use("./following", getFollowing);
-    app.use("./following", unfollowTrainLine);
-    app.use("./following", unfollowUser);
+    app.use("/following", followTrainLine);
+    app.use("/following", followUser);
+    app.use("/following", getFollowing);
+    app.use("/following", unfollowTrainLine);
+    app.use("/following", unfollowUser);
+    app.use("/following", followRequestUser);
+    app.use("/following", removeFollower);
+
+    app.use("/messages", require("./routes/messageRoutes"));
+
+
+    app.use("/messages", require("./routes/messageRoutes"));
+
 
 
     // Global error handler

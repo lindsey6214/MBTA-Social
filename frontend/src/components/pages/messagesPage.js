@@ -4,29 +4,36 @@ import { FaEnvelope } from "react-icons/fa";
 import getUserInfo from "../../utilities/decodeJwt";
 
 const MessagesPage = () => {
+  const user = getUserInfo();
+  const [followedUsers, setFollowedUsers] = useState([]);
+  const [receiverId, setReceiverId] = useState("");
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const user = getUserInfo();
 
-  // Replace this with the actual receiverId you want to test with
-  const receiverId = "Useryg529q"; // ❗️ Replace this
-
+  // Fetch followed users
   useEffect(() => {
     if (!user) return;
 
     axios
-      .get("http://localhost:8081/messages/conversation", {
-        params: {
-          user1: user.id,
-          user2: receiverId,
-        },
-      })
-      .then((res) => setMessages(res.data))
-      .catch((err) => console.error("Fetch error:", err));
+      .get(`http://localhost:8081/following/${user.id}`)
+      .then((res) => setFollowedUsers(res.data))
+      .catch((err) => console.error("Failed to load followed users:", err));
   }, [user]);
 
+  // Fetch messages with selected receiver
+  useEffect(() => {
+    if (!user || !receiverId) return;
+
+    axios
+      .get("http://localhost:8081/messages/conversation", {
+        params: { user1: user.id, user2: receiverId },
+      })
+      .then((res) => setMessages(res.data))
+      .catch((err) => console.error("Message fetch error:", err));
+  }, [user, receiverId]);
+
   const handleSend = async () => {
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() || !receiverId) return;
 
     const payload = {
       senderId: user.id,
@@ -36,7 +43,7 @@ const MessagesPage = () => {
 
     try {
       const res = await axios.post("http://localhost:8081/messages/send", payload);
-      setMessages([...messages, res.data]);
+      setMessages((prev) => [...prev, res.data]);
       setNewMessage("");
     } catch (err) {
       console.error("Send error:", err);
@@ -45,10 +52,25 @@ const MessagesPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-yellow-400 text-white px-8 py-6">
-      <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
+      <h1 className="text-3xl font-bold mb-4 flex items-center gap-2">
         <FaEnvelope /> Messages
       </h1>
 
+      {/* User Picker */}
+      <select
+        value={receiverId}
+        onChange={(e) => setReceiverId(e.target.value)}
+        className="p-2 text-black rounded mb-4 w-full"
+      >
+        <option value="">Select a user to message</option>
+        {followedUsers.map((u) => (
+          <option key={u._id} value={u._id}>
+            {u.username}
+          </option>
+        ))}
+      </select>
+
+      {/* Messages UI */}
       <div className="bg-white/20 rounded-xl p-4 backdrop-blur-sm shadow-md mb-6 h-72 overflow-y-auto">
         {messages.map((msg) => (
           <div
@@ -67,6 +89,7 @@ const MessagesPage = () => {
         ))}
       </div>
 
+      {/* Message Input */}
       <div className="flex gap-2">
         <input
           value={newMessage}
