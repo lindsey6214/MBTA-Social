@@ -4,6 +4,12 @@ const Comment = require("../../models/commentModel");
 const Post = require("../../models/postModel");
 const User = require("../../models/userModel");
 
+const {
+  preprocessText,
+  moderateContent,
+  censorContent,
+} = require("../../utilities/openaiService");
+
 // Create a new comment
 router.post("/createComment", async (req, res) => {
   const { postID, userID, username, content, parentComment } = req.body;
@@ -21,12 +27,26 @@ router.post("/createComment", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Preprocess and moderate the comment content
+    const normalizedContent = preprocessText(content);
+    const moderationResult = await moderateContent(normalizedContent);
+
+    if (moderationResult.flagged) {
+      return res.status(403).json({
+        message: "Comment rejected due to inappropriate content.",
+        categories: moderationResult.categories,
+      });
+    }
+
+    // Censor the content before saving
+    const censoredContent = await censorContent(normalizedContent, ["slur", "curse"]);
+
     // Create new comment
     const newComment = new Comment({
       postID,
       userID,
       username,
-      content,
+      content: censoredContent,
       parentComment: parentComment || null,
     });
 

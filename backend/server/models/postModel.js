@@ -4,14 +4,10 @@ const mongoose = require("mongoose");
 const newPostSchema = new mongoose.Schema(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "users", required: true },
-    trainLineId: { type: String, required: false },
     username: { type: String, required: true },
     content: { type: String, required: true },
     imageUri: { type: String, label: "imageUri", required: false },
     date: { type: Date, default: Date.now },
-    isSensitive: { type: Boolean, default: false }, // New field
-    hasOffensiveText: {type: Boolean, default: false },
-    location: {type: String,  required: false},
     moderationFlag: { type: String, enum: ['clean', 'censored'], default: 'clean' },
   },
   { collection: "posts" }
