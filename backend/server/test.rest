@@ -5,12 +5,12 @@ POST http://localhost:8081/user/signup
 Content-Type: application/json 
 
 {
-    "email": "spraggins0602@gmail.com",
-    "password": "F0rtun3c00k!3",
-    "birthdate": "2004-06-02"
+    "email": "test@gmail.com",
+    "password": "Ilovepasta123!",
+    "birthdate": "2004-06-21"
 }
 
-### log in
+###
 POST http://localhost:8081/user/login
 Content-Type: application/json 
 
@@ -29,12 +29,12 @@ Content-Type: application/json
   "accessCode": "BlueLineIsTheBestLine12345"
 }
 
-### get all users
+###
 GET http://localhost:8081/user/getAll
 access-code: BlueLineIsTheBestLine12345
 Content-Type: application/json
 
-### edit user
+###
 POST http://localhost:8081/user/editUser
 Content-Type: application/json 
 
@@ -43,16 +43,16 @@ Content-Type: application/json
     "username" : "Userf8u2sf",
     "password" : "Tochi12345!"
 }
- 
-### get user by id
+
+###
 GET  http://localhost:8081/user/getUserById
 Content-Type: application/json 
 
 {
-    "userId" : "67e9b2cf929242eb614074af"
+    "userId" : ""
 }
 
-### delete user by email
+###
 DELETE http://localhost:8081/user/deleteUserByEmail
 Content-Type: application/json
 
@@ -66,10 +66,9 @@ POST http://localhost:8081/posts/createPost
 Content-Type: application/json
 
 {
-    "content" : "GO SOX!",
+    "content" : "fuck the yankees!",
     "userId" : "67e9b2cf929242eb614074af",
     "username" : "User5g9fdw"
-    "trainLineId": "Red"   // Optional: remove or change this to attach to a line
 }
 
 ### Get all posts
@@ -85,18 +84,12 @@ GET http://localhost:8081/posts/67ef0408f7531863f6aa0004
 Content-Type: application/json
 
 ### Update post by post ID
-PUT http://localhost:8081/posts/updatePost/67ef2c0dbc19694284ff1f32
+PUT http://localhost:8081/posts/updatePost/67fea005da7d1c0e75381331
 Content-Type: application/json
 
 {
-    "content": "updated sox",
-    "isSensitive": true,
-    "hasOffensiveText": false
+    "content": "hi"
 }
-
-### Get Posts for Red Line
-GET http://localhost:3000/posts/trainline/Red
-
 
 ### Delete a specific post by post ID
 DELETE http://localhost:8081/posts/deletePost/67ef024deeaef67043af55bf
@@ -111,10 +104,10 @@ POST http://localhost:8081/comments/createComment
 Content-Type: application/json
 
 {
-    "postID": "67f0151cd0bab9f6e3b892af",
+    "postID": "67fe995585e293167d1ef5be",
     "userID": "67e9b2cf929242eb614074af",
     "username": "User5g9fdw",
-    "content": "fenwayyyyy :)",
+    "content": "I hate the orange line",
     "parentComment": null
 }
 
@@ -132,11 +125,11 @@ Content-Type: application/json
 
 
 ### Update comment by comment ID
-PUT http://localhost:8081/comments/updateComment/67ef2c2fbc19694284ff1f38
+PUT http://localhost:8081/comments/updateComment/67fe9b0885e293167d1ef5d6
 Content-Type: application/json
 
 {
-    "content": "Updated fenway!"
+    "content": "I love the orange line!"
 }
 
 ### Delete a specific comment by comment ID
@@ -175,7 +168,7 @@ Content-Type: application/json
 ### Follow/Unfollow trainline/user
 
 ### Follow a User
-POST http://localhost:8081/follow/user/67f69f431a0c52207d64ae78
+POST http://localhost:8081/follow/user/USER_ID
 Authorization: Bearer YOUR_ACCESS_TOKEN
 Content-Type: application/json
 
@@ -184,21 +177,15 @@ POST http://localhost:8081/unfollow/user/USER_ID
 Authorization: Bearer YOUR_ACCESS_TOKEN
 Content-Type: application/json
 
-### Follow Red Line
-POST http://localhost:8081/following/line/Red
+### Follow a Train Line
+POST http://localhost:8081/follow/line/TRAINLINE_ID
+Authorization: Bearer YOUR_ACCESS_TOKEN
 Content-Type: application/json
 
-{
-  "userId": "67e9b2cf929242eb614074af"
-}
-
-### Unfollow Red Line
-POST http://localhost:8081/following/unfollow/line/Red
+### Unfollow a Train Line
+POST http://localhost:8081/unfollow/line/TRAINLINE_ID
+Authorization: Bearer YOUR_ACCESS_TOKEN
 Content-Type: application/json
-
-{
-  "userId": "67e9b2cf929242eb614074af"
-}
 
 ### Get Following Users & Train Lines
 GET http://localhost:8081/following

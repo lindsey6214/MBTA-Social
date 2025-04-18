@@ -3,3 +3,4 @@ config.env
 /build
 /coverage
 .env
+backend/server/.env
