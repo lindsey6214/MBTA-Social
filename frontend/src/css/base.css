@@ -82,13 +82,3 @@ darker grey: #222
 .navbar-custom .nav-link:hover {
   color: #3c3e40;
 }
-
-.navbar-custom .navbar-brand {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 1.5rem; /* Adjust size as needed */
-  font-weight: 600; /* Medium boldness */
-  color: #e3056c; /* White color */
-  text-transform: uppercase; /* Optional: for a more prominent look */
-  letter-spacing: 2px; /* Slightly spaced out letters for a clean look */
-  transition: color 0.3s ease; /* Smooth transition on hover */
-}
