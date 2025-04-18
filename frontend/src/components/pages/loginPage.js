@@ -84,19 +84,16 @@ const Login = () => {
 
             <Form.Group className="mb-3">
               <Form.Label
-                style={{ fontWeight: "bold", color: "white" }} // Make label text white
-              >
-                Password
-              </Form.Label>
-              <Form.Control
-                type="password"
-                name="password"
-                onChange={handleChange}
-                placeholder="Password"
-                required
-                style={{ color: "black", backgroundColor: "white" }} // White background, black text
-              />
-            </Form.Group>
+                style={{ fontWeight: "bold", color: "white" }}>Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    name="password"
+                    onChange={handleChange}
+                    placeholder="Password"
+                    required
+                    style={{ color: "black", backgroundColor: "white" }} // White background, black text
+                  />
+                </Form.Group>
 
             <Button
               type="submit"
@@ -105,10 +102,7 @@ const Login = () => {
                 border: "none",
                 width: "100%",
               }}
-              className="mt-3"
-            >
-              Log In
-            </Button>
+              className="auth-button">Log In</Button>
           </Form>
 
           {/* Sign-up Link */}
