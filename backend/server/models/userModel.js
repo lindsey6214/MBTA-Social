@@ -40,6 +40,7 @@ const userSchema = new mongoose.Schema({
   },
   followingUsers: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],
   followingLines: [{type: mongoose.Schema.Types.ObjectId, ref: "TrainLine"}],
+  followRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 const User = mongoose.model("User", userSchema);
