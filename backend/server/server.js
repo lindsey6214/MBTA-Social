@@ -25,9 +25,11 @@ const getLikesByPost = require("./routes/likes/getLikesByPost");
 const getUsersWhoLikedPost = require("./routes/likes/getUsersWhoLikedPost");
 const checkIfUserLiked = require("./routes/likes/checkIfUserLiked");
 
+const followRequest = require("./routes/following/followRequest");
 const followTrainLine = require("./routes/following/followTrainLine");
 const followUser = require("./routes/following/followUser");
 const getFollowing = require("./routes/following/getFollowing");
+const removeFollower = require("./routes/following/removeFollower");
 const unfollowTrainLine = require("./routes/following/unfollowTrainLine");
 const unfollowUser = require("./routes/following/unfollowUser");
 
@@ -81,7 +83,7 @@ dbConnection()
     app.use("/following", getFollowing);
     app.use("/following", unfollowTrainLine);
     app.use("/following", unfollowUser);
-    app.use("/following", followRequestUser);
+    app.use("/following", followRequest);
     app.use("/following", removeFollower);
 
     app.use("/messages", require("./routes/messageRoutes"));
