@@ -38,7 +38,9 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data: res } = await axios.post(url, data);
+      const { data: res } = await axios.post(url, data, {
+      withCredentials: true,
+      });
       localStorage.setItem("accessToken", res.accessToken);
       navigate("/home");
     } catch (error) {
@@ -101,10 +103,7 @@ const Login = () => {
                 border: "none",
                 width: "100%",
               }}
-              className="auth-button"
-            >
-              Log In
-            </Button>
+              className="auth-button">Log In</Button>
           </Form>
 
           {/* Sign-up Link */}

@@ -46,7 +46,28 @@ dbConnection()
   .then(() => {
     console.log("✅ Connected to the database.");
 
-    app.use(cors({ origin: ALLOWED_ORIGINS }));
+    app.use(cors({
+      origin: function (origin, callback) {
+        if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+      credentials: true,
+    }));
+
+    app.use(cors(corsOptions)); // Global CORS configuration
+
+    app.options('/user/login', cors(corsOptions));
+
+    app.post('/user/login', (req, res) => {
+      const accessToken = generateAccessToken(user);
+      res.status(200).json({ accessToken });
+    });
+
     app.use(express.json());
     app.use(morgan("dev")); // Logs HTTP requests
 
