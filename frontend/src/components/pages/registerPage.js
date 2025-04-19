@@ -87,9 +87,18 @@ const Register = () => {
                 />
               </Form.Group>
 
-            <Button
-              className="auth-button">Sign Up</Button>
-          </Form>
+              <Button
+                type="submit"
+                style={{
+                  background: PRIMARY_COLOR,
+                  border: "none",
+                  width: "100%",
+                }}
+                className="mt-3"
+              >
+                Sign Up
+              </Button>
+            </Form>
 
           {/* Login Link */}
           <div className="text-center mt-3">
