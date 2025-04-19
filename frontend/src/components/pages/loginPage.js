@@ -66,7 +66,6 @@ const Login = () => {
           Sign in to access your account.
         </p>
 
-        <div className="w-full max-w-sm space-y-4">
           {/* Login Form */}
           <Form onSubmit={handleSubmit} className="landing-right-form">
             <Form.Group className="mb-3">
@@ -118,7 +117,6 @@ const Login = () => {
           </div>
         </div>
       </div>
-    </div>
 
       {/* Error Modal */}
       <Modal show={showErrorModal} onHide={() => setShowErrorModal(false)} centered>
