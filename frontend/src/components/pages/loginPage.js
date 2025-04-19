@@ -101,7 +101,10 @@ const Login = () => {
                 border: "none",
                 width: "100%",
               }}
-              className="auth-button">Log In</Button>
+              className="auth-button"
+            >
+              Log In
+            </Button>
           </Form>
 
           {/* Sign-up Link */}
