@@ -7,8 +7,25 @@ import '../../css/feed.css';
 
 const HomePage = () => {
   const [posts, setPosts] = useState([]);
+  const [content, setContent] = useState('');
+  const [username, setUsername] = useState(''); 
+  const [userId, setUserId] = useState('');
 
   useEffect(() => {
+
+    const userData = localStorage.getItem('user');
+    console.log("Raw user data:", userData);
+
+    if (userData) {
+      try {
+        const parsedUserData = JSON.parse(userData); // Parse the user data
+        setUsername(parsedUserData.username);
+        setUserId(parsedUserData._id);
+      } catch (error) {
+      console.error('Error parsing user data from localStorage:', error);
+  }
+} 
+
     axios.get('http://localhost:8081/posts/')
       .then(response => {
         setPosts(response.data);
@@ -17,6 +34,31 @@ const HomePage = () => {
         console.error('Error fetching posts:', error);
       });
   }, []);
+
+  const handlePost = () => {
+    console.log("Posting with:", {
+      username,
+      userId,
+      content
+    });
+    if (!content.trim()) return;
+  
+    axios.post('http://localhost:8081/posts/createPost', {
+      username,
+      userId,
+      content
+    })
+    .then(() => {
+      setContent('');
+      return axios.get('http://localhost:8081/posts/');
+    })
+    .then(response => {
+      setPosts(response.data);
+    })
+    .catch(error => {
+      console.error('Error creating post:', error);
+    });
+  };
 
   return (
     <div className="main-container">
@@ -37,9 +79,11 @@ const HomePage = () => {
             <NavItem to="/" icon={<FaEllipsisH />} label="More" />
           </div>
           <button 
-            className="post-button">
+            className="post-button"
+            onClick={handlePost}
+            >
               Post
-              </button>
+            </button>
       </div>
 
       {/* Feed */}
@@ -49,9 +93,15 @@ const HomePage = () => {
             className="new-post-textarea" 
             placeholder="What’s happening?" 
             rows="3" 
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
             />
           <div className="flex justify-end">
-            <button className="new-post-button">Post</button>
+            <button className="new-post-button"
+            onClick={handlePost}
+            >
+              Post
+            </button>
           </div>
         </div>
 
