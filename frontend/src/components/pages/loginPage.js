@@ -26,10 +26,23 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
-    if (user) {
-      navigate("/home");
+    // Check if the user is already logged in
+    const userInfo = getUserInfo(); // Decoding JWT or checking accessToken in localStorage
+    if (userInfo) {
+      setUser(userInfo); // Set user state if logged in
+      navigate("/home"); // Redirect to home if already logged in
+    } else {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        // If accessToken exists, try to decode it and set user info
+        const decodedUser = getUserInfo(); // Decode and get user info from token
+        if (decodedUser) {
+          setUser(decodedUser);
+          navigate("/home");
+        }
+      }
     }
-  }, [user, navigate]);
+  }, [navigate]);
 
   const handleChange = ({ target: { name, value } }) => {
     setData((prevData) => ({ ...prevData, [name]: value }));
@@ -42,6 +55,8 @@ const Login = () => {
       withCredentials: true,
       });
       localStorage.setItem("accessToken", res.accessToken);
+      localStorage.setItem("user", JSON.stringify(res.user));
+
       navigate("/home");
     } catch (error) {
       if (error.response?.status >= 400) {

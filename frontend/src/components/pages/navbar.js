@@ -6,23 +6,30 @@ import ReactNavbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { FaUserCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import "../../css/base.css";
 
 export default function Navbar() {
   const [user, setUser] = useState(null);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const userInfo = getUserInfo();
-    if (userInfo) {
-      setUser(userInfo);
+    const userInfo = localStorage.getItem("user");;
+    try {
+      if (userInfo) {
+        // Try to parse the userInfo, if it fails, it will throw an error
+        setUser(JSON.parse(userInfo));
+      }
+    } catch (error) {
+      console.error("Error parsing user data from localStorage:", error);
     }
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("accessToken");
     setUser(null);
-    window.location.href = "/";
+    navigate("/");
   };
 
   return (

@@ -31,7 +31,14 @@ router.post("/login", async (req, res) => {
     const accessToken = generateAccessToken(user._id, user.email, user.username);
 
     // Send token in response header
-    res.header("Authorization", accessToken).json({ accessToken });
+    res.json({
+      accessToken,        // Send the access token
+      user: {             // Send the full user data
+        _id: user._id,
+        username: user.username,
+        email: user.email
+      }
+    });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Internal server error." });
