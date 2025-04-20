@@ -67,16 +67,16 @@ const HomePage = () => {
       <div className="sidebar">
           <FaFeatherAlt className="icon" />
           <div className="nav-list">
-            <NavItem to="/" icon={<FaHome />} label="Home" />
-            <NavItem to="/" icon={<FaHashtag />} label="Explore" />
-            <NavItem to="/" icon={<FaBell />} label="Notifications" />
-            <NavItem to="/" icon={<FaEnvelope />} label="Messages" />
-            <NavItem to="/" icon={<FaBookmark />} label="Bookmarks" />
-            <NavItem to="/" icon={<FaUsers />} label="Communities" />
-            <NavItem to="/" icon={<FaCrown />} label="Premium" />
-            <NavItem to="/" icon={<FaBolt />} label="Verified Orgs" />
+            <NavItem to="/home" icon={<FaHome />} label="Home" />
+            <NavItem to="/explore" icon={<FaHashtag />} label="Explore" />
+            <NavItem to="/notifications" icon={<FaBell />} label="Notifications" />
+            <NavItem to="/messages" icon={<FaEnvelope />} label="Messages" />
+            <NavItem to="/bookmarks" icon={<FaBookmark />} label="Bookmarks" />
+            <NavItem to="/communities" icon={<FaUsers />} label="Communities" />
+            <NavItem to="/premium" icon={<FaCrown />} label="Premium" />
+            <NavItem to="/verified orgs" icon={<FaBolt />} label="Verified Orgs" />
             <NavItem to="/profile" icon={<FaUser />} label="Profile" />
-            <NavItem to="/" icon={<FaEllipsisH />} label="More" />
+            <NavItem to="/more" icon={<FaEllipsisH />} label="More" />
           </div>
           <button 
             className="post-button"
@@ -119,11 +119,11 @@ const HomePage = () => {
   );
 };
 
-const NavItem = ({ icon, label }) => (
-  <div className="flex items-center space-x-3 text-lg cursor-pointer hover:font-bold transition">
+const NavItem = ({ to, icon, label }) => (
+  <Link to={to} className="nav-item" style={{textDecoration: "none"}}>
     <div>{icon}</div>
     <span>{label}</span>
-  </div>
+  </Link>
 );
 
 export default HomePage;
