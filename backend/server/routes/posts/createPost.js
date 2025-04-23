@@ -8,11 +8,14 @@ const moderationMiddleware = require("../../middleware/moderationMiddleware");
 router.post("/createPost", moderationMiddleware, async (req, res) => {
   const { userId, content, imageUri, username } = req.body;
 
+  console.log("📨 Incoming post data:", { userId, content, imageUri, username });
+  console.log("🛡️ Moderation result:", req.censored);
+
   try {
-    const user = await User.findOne({ username });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+   //const user = await User.findOne({ username });
+  //  if (!user) {
+  //    return res.status(404).json({ message: "User not found" });
+   // }
 
     const newPost = new Post({
       userId,
@@ -24,6 +27,7 @@ router.post("/createPost", moderationMiddleware, async (req, res) => {
 
     // Save to database
     const savedPost = await newPost.save();
+
     res.status(201).json(savedPost);
   } catch (error) {
     console.error("❌ Error creating post:", error);
