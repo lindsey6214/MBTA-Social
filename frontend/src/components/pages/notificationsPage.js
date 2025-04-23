@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { FaBell, FaUserCircle } from "react-icons/fa";
 import getUserInfo from "../../utilities/decodeJwt";
+import { FaHome, FaUser, FaBell, FaEnvelope, FaHashtag, FaBookmark, FaUsers, FaCrown, FaBolt, FaUserCircle, FaEllipsisH, FaFeatherAlt } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import '../../css/base.css';
+import '../../css/notificationsPage.css'; 
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
@@ -8,7 +11,7 @@ const NotificationsPage = () => {
 
   useEffect(() => {
     if (!user) return;
-    // This is just mocked notifications for now
+    // fake notifications for now
     setNotifications([
       {
         _id: 1,
@@ -23,36 +26,59 @@ const NotificationsPage = () => {
     ]);
   }, [user]);
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-yellow-400 text-white px-8 py-6">
-      <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
-        <FaBell /> Notifications
-      </h1>
+  const NavItem = ({ to, icon, label }) => (
+    <Link to={to} className="nav-item" style={{textDecoration: "none"}}>
+      <div>{icon}</div>
+      <span>{label}</span>
+    </Link>
+  );
 
-      {user ? (
-        notifications.length > 0 ? (
-          <div className="space-y-4">
-            {notifications.map((note) => (
-              <div
-                key={note._id}
-                className="bg-white/20 p-4 rounded-xl backdrop-blur-sm shadow-md"
-              >
-                <div className="flex items-center space-x-3">
-                  <FaUserCircle className="text-xl" />
-                  <div>
-                    <p className="text-white font-semibold">{note.message}</p>
-                    <p className="text-sm text-white/70">{note.time}</p>
+  return (
+    <div className="main-container">
+      {/* Sidebar */}
+      <div className="sidebar">
+        <FaFeatherAlt className="icon" />
+        <div className="nav-list">
+          <NavItem to="/home" icon={<FaHome />} label="Home" />
+          <NavItem to="/explore" icon={<FaHashtag />} label="Explore" />
+          <NavItem to="/notifications" icon={<FaBell />} label="Notifications" />
+          <NavItem to="/messages" icon={<FaEnvelope />} label="Messages" />
+          <NavItem to="/bookmarks" icon={<FaBookmark />} label="Bookmarks" />
+          <NavItem to="/communities" icon={<FaUsers />} label="Communities" />
+          <NavItem to="/premium" icon={<FaCrown />} label="Premium" />
+          <NavItem to="/verified-orgs" icon={<FaBolt />} label="Verified Orgs" />
+          <NavItem to="/profile" icon={<FaUser />} label="Profile" />
+          <NavItem to="/more" icon={<FaEllipsisH />} label="More" />
+        </div>
+      </div>
+
+      <div className="notifications-container">
+        <h1 className="notifications-title">
+          <FaBell /> Notifications
+        </h1>
+
+        {user ? (
+          notifications.length > 0 ? (
+            <div className="space-y-4">
+              {notifications.map((note) => (
+                <div key={note._id} className="notification-card">
+                  <div className="notification-content">
+                    <FaUserCircle className="text-xl" />
+                    <div>
+                      <p className="notification-message">{note.message}</p>
+                      <p className="notification-time">{note.time}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <p className="notification-fallback">No notifications yet.</p>
+          )
         ) : (
-          <p>No notifications yet.</p>
-        )
-      ) : (
-        <p className="text-lg">Please log in to see your notifications.</p>
-      )}
+          <p className="notification-fallback">Please log in to see your notifications.</p>
+        )}
+      </div>
     </div>
   );
 };
