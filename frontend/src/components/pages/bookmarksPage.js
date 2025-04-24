@@ -32,17 +32,17 @@ const BookmarksPage = () => {
             >
               <p className="font-semibold">@{post.username}</p>
               <p className="mt-2">{post.content}</p>
-              {post.imageUri && (
-                post.imageUri.endsWith(".mp4") ? (
+              {post.mediaUris && (
+                post.mediaUris.endsWith(".mp4") ? (
                   <video controls className="mt-2 w-full rounded-lg">
                     <source
-                      src={`http://localhost:8081${post.imageUri}`}
+                      src={`http://localhost:8081${post.mediaUris}`}
                       type="video/mp4"
                     />
                   </video>
                 ) : (
                   <img
-                    src={`http://localhost:8081${post.imageUri}`}
+                    src={`http://localhost:8081${post.mediaUris}`}
                     alt="Post media"
                     className="mt-2 w-full rounded-lg"
                   />

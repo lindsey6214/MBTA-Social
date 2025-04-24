@@ -39,9 +39,9 @@ POST http://localhost:8081/user/editUser
 Content-Type: application/json 
 
 {
-    "userId" : "635ab8dfc407faf9f73deaf2",
-    "username" : "Userf8u2sf",
-    "password" : "Tochi12345!"
+    "userId" : "67e9b2cf929242eb614074af",
+    "username" : "User5g9fdw",
+    "password" : "Sharon122!"
 }
 
 ###
@@ -66,7 +66,7 @@ POST http://localhost:8081/posts/createPost
 Content-Type: application/json
 
 {
-    "content" : "fuck the yankees!",
+    "content" : "gldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjhellomyname",
     "userId" : "67e9b2cf929242eb614074af",
     "username" : "User5g9fdw"
 }
@@ -92,7 +92,7 @@ Content-Type: application/json
 }
 
 ### Delete a specific post by post ID
-DELETE http://localhost:8081/posts/deletePost/67ef024deeaef67043af55bf
+DELETE http://localhost:8081/posts/deletePost/6809a2d332da21159e8388ef
 Content-Type: application/json
 
 ### Delete ALL posts
