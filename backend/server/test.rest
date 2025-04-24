@@ -66,7 +66,7 @@ POST http://localhost:8081/posts/createPost
 Content-Type: application/json
 
 {
-    "content" : "gldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjnesginesunguesngioiejslgninjsggldrjgnkjenrgjhellomyname",
+    "content" : "hello @User2vgt92",
     "userId" : "67e9b2cf929242eb614074af",
     "username" : "User5g9fdw"
 }
@@ -104,10 +104,10 @@ POST http://localhost:8081/comments/createComment
 Content-Type: application/json
 
 {
-    "postID": "67fe995585e293167d1ef5be",
+    "postID": "680a6b6a57f4533d51aee059",
     "userID": "67e9b2cf929242eb614074af",
     "username": "User5g9fdw",
-    "content": "I hate the orange line",
+    "content": "Hello @User2vgt92",
     "parentComment": null
 }
 

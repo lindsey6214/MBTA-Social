@@ -21,8 +21,9 @@ const newPostSchema = new mongoose.Schema(
       },
       default: []
     },
-    timestamp: { type: Date, default: Date.now },
     moderationFlag: { type: String, enum: ['clean', 'censored'], default: 'clean' },
+    mentions: { type: [String], default: [] },
+    timestamp: { type: Date, default: Date.now },
   },
   { collection: "posts" }
 );

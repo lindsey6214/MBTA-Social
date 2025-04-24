@@ -14,6 +14,7 @@ const newCommentSchema = new mongoose.Schema(
     },
     parentComment: { type: mongoose.Schema.Types.ObjectId, ref: "comments", default: null },
     moderationFlag: { type: String, enum: ['clean', 'censored'], default: 'clean' },
+    mentions: { type: [String], default: [] },
     timestamp: { type: Date, default: Date.now },
   },
   { collection: "comments" }
