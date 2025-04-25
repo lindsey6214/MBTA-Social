@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from 'react-router-dom';
 import { 
-  FaHome, FaUser, FaBell, FaEnvelope, FaHashtag, FaBookmark, 
-  FaUsers, FaCrown, FaBolt, FaEllipsisH, FaFeatherAlt 
+  FaHome, FaUser, FaBell, FaEnvelope, FaHashtag, FaBookmark, FaEllipsisH 
 } from 'react-icons/fa';
 import '../../css/base.css';
 import '../../css/explorePage.css'; // Link to the new stylesheet
@@ -57,16 +56,12 @@ const ExplorePage = () => {
     <div className="main-container">
       {/* Sidebar */}
       <div className="sidebar">
-        <FaFeatherAlt className="icon" />
         <div className="nav-list">
           <NavItem to="/home" icon={<FaHome />} label="Home" />
           <NavItem to="/explore" icon={<FaHashtag />} label="Explore" />
           <NavItem to="/notifications" icon={<FaBell />} label="Notifications" />
           <NavItem to="/messages" icon={<FaEnvelope />} label="Messages" />
           <NavItem to="/bookmarks" icon={<FaBookmark />} label="Bookmarks" />
-          <NavItem to="/communities" icon={<FaUsers />} label="Communities" />
-          <NavItem to="/premium" icon={<FaCrown />} label="Premium" />
-          <NavItem to="/verified-orgs" icon={<FaBolt />} label="Verified Orgs" />
           <NavItem to="/profile" icon={<FaUser />} label="Profile" />
           <NavItem to="/more" icon={<FaEllipsisH />} label="More" />
         </div>
@@ -91,14 +86,14 @@ const ExplorePage = () => {
           <div key={post._id} className="post-card">
             <div className="username">@{post.username}</div>
             <p>{post.content}</p>
-            {post.imageUri &&
-              (post.imageUri.endsWith(".mp4") ? (
+            {post.mediaUris &&
+              (post.mediaUris.endsWith(".mp4") ? (
                 <video controls>
-                  <source src={`http://localhost:8081${post.imageUri}`} type="video/mp4" />
+                  <source src={`http://localhost:8081${post.mediaUris}`} type="video/mp4" />
                 </video>
               ) : (
                 <img
-                  src={`http://localhost:8081${post.imageUri}`}
+                  src={`http://localhost:8081${post.mediaUris}`}
                   alt="Post media"
                 />
               ))}
