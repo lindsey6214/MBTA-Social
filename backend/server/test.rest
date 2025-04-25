@@ -191,3 +191,22 @@ Content-Type: application/json
 GET http://localhost:8081/following
 Authorization: Bearer YOUR_ACCESS_TOKEN
 Content-Type: application/json
+
+### Send message to another user
+POST http://localhost:8081/messages/send
+Content-Type: application/json
+
+{
+  "senderId": "67e9b2cf929242eb614074af",
+  "receiverId": "67f69f431a0c52207d64ae78",
+  "content": "Hey there! How are you?"
+}
+
+### Get full conversation between two users
+GET http://localhost:8081/messages/conversation?senderId=67e9b2cf929242eb614074af&receiverId=67f69f431a0c52207d64ae78
+
+### View all conversations for a user
+GET http://localhost:8081/messages/conversations/67e9b2cf929242eb614074af
+
+### Delete a message by ID
+DELETE http://localhost:8081/messages/YOUR_MESSAGE_ID_HERE
