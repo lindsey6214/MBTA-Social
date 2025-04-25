@@ -31,7 +31,6 @@ Content-Type: application/json
 
 ###
 GET http://localhost:8081/user/getAll
-access-code: BlueLineIsTheBestLine12345
 Content-Type: application/json
 
 ###

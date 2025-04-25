@@ -99,3 +99,49 @@
 .nav-item:hover {
   color: #e3056c;
 }
+
+.search-bar {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.search-results {
+  background: white;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.search-result-item {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.search-result-item:hover {
+  background-color: #eee;
+}
+
+.no-user {
+  padding: 8px;
+  color: red;
+}
+
+.conversation-list {
+  margin-bottom: 20px;
+}
+
+.conversation-preview {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.conversation-preview:hover {
+  background-color: #f7f7f7;
+}
+
+.last-message {
+  color: #666;
+  font-size: 0.9em;
+}

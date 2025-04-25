@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { FaHome, FaUser, FaBell, FaEnvelope, FaHashtag, FaBookmark, FaUserCircle, FaEllipsisH } from 'react-icons/fa';
+import {
+  FaHome,
+  FaUser,
+  FaBell,
+  FaEnvelope,
+  FaHashtag,
+  FaBookmark,
+  FaEllipsisH,
+} from "react-icons/fa";
 import getUserInfo from "../../utilities/decodeJwt";
 import { Link } from "react-router-dom";
 import "../../css/base.css";
@@ -8,32 +16,47 @@ import "../../css/messagesPage.css";
 
 const MessagesPage = () => {
   const user = getUserInfo();
-  const [followedUsers, setFollowedUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [receiverId, setReceiverId] = useState("");
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [conversations, setConversations] = useState([]);
 
-  // Fetch followed users
+  // Fetch all users
   useEffect(() => {
     if (!user) return;
 
     axios
-      .get(`http://localhost:8081/following/${user.id}`)
-      .then((res) => setFollowedUsers(res.data))
-      .catch((err) => console.error("Failed to load followed users:", err));
+      .get("http://localhost:8081/user/getAll")
+      .then((res) => setAllUsers(res.data))
+      .catch((err) => console.error("Failed to fetch users:", err));
   }, [user]);
+
+  // Fetch all conversations for the current user
+  useEffect(() => {
+    if (!user?.id) return;
+
+    axios
+      .get(`http://localhost:8081/messages/conversations/${user.id}`)
+      .then((res) => setConversations(res.data))
+      .catch((err) => console.error("Failed to load conversations:", err));
+  }, [user?.id]);
 
   // Fetch messages with selected receiver
   useEffect(() => {
-    if (!user || !receiverId) return;
+    if (!user?.id || !receiverId) return;
 
     axios
       .get("http://localhost:8081/messages/conversation", {
-        params: { user1: user.id, user2: receiverId },
+        params: {
+          senderId: user.id,
+          receiverId: receiverId,
+        },
       })
       .then((res) => setMessages(res.data))
       .catch((err) => console.error("Message fetch error:", err));
-  }, [user, receiverId]);
+  }, [user?.id, receiverId]);
 
   const handleSend = async () => {
     if (!newMessage.trim() || !receiverId) return;
@@ -45,13 +68,52 @@ const MessagesPage = () => {
     };
 
     try {
-      const res = await axios.post("http://localhost:8081/messages/send", payload);
+      const res = await axios.post(
+        "http://localhost:8081/messages/send",
+        payload
+      );
       setMessages((prev) => [...prev, res.data]);
       setNewMessage("");
     } catch (err) {
       console.error("Send error:", err);
     }
   };
+
+  const handleSelectUser = (id) => {
+    setReceiverId(id);
+    setSearchTerm("");
+  };
+
+  const getUsername = (id) => {
+    const userObj = allUsers.find((u) => u._id === id);
+    return userObj ? userObj.username : "Unknown";
+  };
+
+  // Filter and sort users
+  const filteredUsers = allUsers
+    .filter(
+      (u) =>
+        u.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        u._id !== user.id
+    )
+    .sort((a, b) => {
+      const usernameA = a.username.toLowerCase();
+      const usernameB = b.username.toLowerCase();
+
+      // Compare alphabetically first
+      if (usernameA < usernameB) return -1;
+      if (usernameA > usernameB) return 1;
+
+      // If the usernames are the same, compare numerically (if one is a number)
+      const isAValueNumeric = !isNaN(usernameA);
+      const isBValueNumeric = !isNaN(usernameB);
+
+      // If one is numeric and the other isn't, place the numeric one last
+      if (isAValueNumeric && !isBValueNumeric) return 1;
+      if (!isAValueNumeric && isBValueNumeric) return -1;
+
+      return 0; // If both are equal, keep their order
+    });
 
   return (
     <div className="main-container">
@@ -74,29 +136,44 @@ const MessagesPage = () => {
           <FaEnvelope /> Messages
         </h1>
 
-        {/* User Picker */}
-        <select
-          value={receiverId}
-          onChange={(e) => setReceiverId(e.target.value)}
+        {/* User Search */}
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search for a user to message"
           className="receiver-select"
-        >
-          <option value="">Select a user to message</option>
-          {followedUsers.map((u) => (
-            <option key={u._id} value={u._id}>
-              {u.username}
-            </option>
-          ))}
-        </select>
+        />
 
-        {/* Messages UI */}
+        {searchTerm &&
+          filteredUsers.length > 0 &&
+          filteredUsers.map((u) => (
+            <div
+              key={u._id}
+              className="search-result"
+              onClick={() => handleSelectUser(u._id)}
+            >
+              {u.username}
+            </div>
+          ))}
+
+        {searchTerm && filteredUsers.length === 0 && (
+          <p className="no-user-found">User does not exist</p>
+        )}
+
+        {/* Current Conversation UI */}
         <div className="messages-box">
           {messages.map((msg) => (
             <div
               key={msg._id}
-              className={`message-row ${msg.senderId === user.id ? "you" : "them"}`}
+              className={`message-row ${
+                msg.senderId === user.id ? "you" : "them"
+              }`}
             >
               <div className="message-bubble">
-                <p className="message-meta">{msg.senderId === user.id ? "You" : "Them"}</p>
+                <p className="message-meta">
+                  {msg.senderId === user.id ? "You" : "Them"}
+                </p>
                 <p>{msg.content}</p>
               </div>
             </div>
@@ -111,12 +188,36 @@ const MessagesPage = () => {
             placeholder="Type your message"
             className="message-input"
           />
-          <button
-            onClick={handleSend}
-            className="send-button"
-          >
+          <button onClick={handleSend} className="send-button">
             Send
           </button>
+        </div>
+
+        {/* Previous Conversations List */}
+        <div className="conversation-list">
+          <h2>Previous Conversations</h2>
+          {conversations.map((conv, i) => {
+            const otherUser =
+              conv._id.sender === user.id
+                ? conv._id.receiver
+                : conv._id.sender;
+
+            const lastMsg =
+              conv.messages.length > 0
+                ? conv.messages[conv.messages.length - 1].content
+                : "";
+
+            return (
+              <div
+                key={i}
+                className="conversation-item"
+                onClick={() => handleSelectUser(otherUser)}
+              >
+                <strong>{getUsername(otherUser)}</strong>
+                <p className="last-message-preview">{lastMsg}</p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
