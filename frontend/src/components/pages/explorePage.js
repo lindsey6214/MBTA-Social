@@ -5,7 +5,7 @@ import {
   FaHome, FaUser, FaBell, FaEnvelope, FaHashtag, FaBookmark, FaEllipsisH 
 } from 'react-icons/fa';
 import '../../css/base.css';
-import '../../css/explorePage.css'; // Link to the new stylesheet
+import '../../css/explorePage.css';
 
 const ExplorePage = () => {
   const [posts, setPosts] = useState([]);
