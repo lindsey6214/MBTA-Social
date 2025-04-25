@@ -7,11 +7,12 @@ import '../../css/notificationsPage.css';
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
-  const user = getUserInfo();
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    if (!user) return;
-    // fake notifications for now
+    const fetchedUser = getUserInfo();
+    if (!fetchedUser) return;
+    setUser(fetchedUser);
     setNotifications([
       {
         _id: 1,
@@ -24,7 +25,7 @@ const NotificationsPage = () => {
         time: "2h ago",
       },
     ]);
-  }, [user]);
+  }, []);
 
   const NavItem = ({ to, icon, label }) => (
     <Link to={to} className="nav-item">
