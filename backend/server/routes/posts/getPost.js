@@ -5,7 +5,7 @@ const Post = require("../../models/postModel");
 // Get all posts
 router.get("/", async (req, res) => {
     try {
-        const allPosts = await Post.find();
+        const allPosts = await Post.find().sort({ timestamp: -1 });
         return res.status(200).json(allPosts);
     } catch (error) {
         return res.status(500).json({ error: "Server error, unable to fetch posts" });

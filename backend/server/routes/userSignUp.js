@@ -4,8 +4,19 @@ const bcrypt = require("bcrypt");
 const { newUserValidation } = require("../models/userValidator");
 const newUserModel = require("../models/userModel");
 
-// More secure username generator
-const generateRandomUsername = () => `User${Math.random().toString(36).substring(2, 8)}`;
+// More secure username generator with uniqueness check
+const generateRandomUsername = async () => {
+  let username;
+  let userExists = true;
+  while (userExists) {
+    username = `User${Math.random().toString(36).substring(2, 8)}`;
+    const existingUser = await newUserModel.findOne({ username });
+    if (!existingUser) {
+      userExists = false;
+    }
+  }
+  return username;
+};
 
 router.post("/signup", async (req, res) => {
   try {
@@ -57,7 +68,7 @@ router.post("/signup", async (req, res) => {
     }
 
     // Generate a secure random username
-    const username = generateRandomUsername();
+    const username = await generateRandomUsername();
 
     // Hash the password AFTER validation
     const salt = await bcrypt.genSalt(10);

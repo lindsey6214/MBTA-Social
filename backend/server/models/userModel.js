@@ -16,11 +16,9 @@ const userSchema = new mongoose.Schema({
   },
   username: {
     type: String,
-    unique: true,
-    immutable: true,
-    default: function () {
-      return "User" + crypto.randomInt(1000, 9999);
-    },
+    unique: true,    // Ensure usernames are unique
+    immutable: true, // Usernames cannot be changed once set
+    required: true,  // Username is provided in the signup process
   },
   birthdate: {
     type: Date,
@@ -38,10 +36,13 @@ const userSchema = new mongoose.Schema({
       message: "Users must be at least 13 years old to sign up.",
     },
   },
-  followingUsers: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],
-  followingLines: [{type: mongoose.Schema.Types.ObjectId, ref: "TrainLine"}],
+  followingUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  followingLines: [{ type: mongoose.Schema.Types.ObjectId, ref: "TrainLine" }],
   followRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
+
+// Ensure the `username` field is indexed for uniqueness
+userSchema.index({ username: 1 });
 
 const User = mongoose.model("User", userSchema);
 

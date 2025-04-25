@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import getUserInfo from "../../utilities/decodeJwt";
 import { Form } from "react-bootstrap"; // For form elements
-import { FaHome, FaUser, FaBell, FaEnvelope, FaHashtag, FaBookmark, FaUsers, FaCrown, FaBolt, FaUserCircle, FaEllipsisH, FaFeatherAlt } from 'react-icons/fa';
+import { FaHome, FaUser, FaBell, FaEnvelope, FaHashtag, FaBookmark, FaUserCircle, FaEllipsisH } from 'react-icons/fa';
 import { Link } from "react-router-dom";
 import '../../css/userProfilePage.css';
 import '../../css/base.css';
@@ -44,16 +44,12 @@ const UserProfile = () => {
 
 {/* Sidebar */}
 <div className="sidebar">
-    <FaFeatherAlt className="icon" />
     <div className="nav-list">
       <NavItem to="/home" icon={<FaHome />} label="Home" />
       <NavItem to="/explore" icon={<FaHashtag />} label="Explore" />
       <NavItem to="/notifications" icon={<FaBell />} label="Notifications" />
       <NavItem to="/messages" icon={<FaEnvelope />} label="Messages" />
       <NavItem to="/bookmarks" icon={<FaBookmark />} label="Bookmarks" />
-      <NavItem to="/communities" icon={<FaUsers />} label="Communities" />
-      <NavItem to="/premium" icon={<FaCrown />} label="Premium" />
-      <NavItem to="/verified-orgs" icon={<FaBolt />} label="Verified Orgs" />
       <NavItem to="/profile" icon={<FaUser />} label="Profile" />
       <NavItem to="/more" icon={<FaEllipsisH />} label="More" />
     </div>
