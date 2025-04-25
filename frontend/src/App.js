@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import './css/card.css';
 import './index.css';
 
 
