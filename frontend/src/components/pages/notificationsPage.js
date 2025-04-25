@@ -25,7 +25,7 @@ const NotificationsPage = () => {
         time: "2h ago",
       },
     ]);
-  }, []);
+  }, [user]);
 
   const NavItem = ({ to, icon, label }) => (
     <Link to={to} className="nav-item">

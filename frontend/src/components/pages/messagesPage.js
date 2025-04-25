@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { FaEnvelope } from "react-icons/fa";
+import { FaHome, FaUser, FaBell, FaEnvelope, FaHashtag, FaBookmark, FaUserCircle, FaEllipsisH } from 'react-icons/fa';
 import getUserInfo from "../../utilities/decodeJwt";
+import { Link } from "react-router-dom";
+import "../../css/base.css";
+import "../../css/messagesPage.css";
 
 const MessagesPage = () => {
   const user = getUserInfo();
@@ -51,61 +54,80 @@ const MessagesPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-yellow-400 text-white px-8 py-6">
-      <h1 className="text-3xl font-bold mb-4 flex items-center gap-2">
-        <FaEnvelope /> Messages
-      </h1>
-
-      {/* User Picker */}
-      <select
-        value={receiverId}
-        onChange={(e) => setReceiverId(e.target.value)}
-        className="p-2 text-black rounded mb-4 w-full"
-      >
-        <option value="">Select a user to message</option>
-        {followedUsers.map((u) => (
-          <option key={u._id} value={u._id}>
-            {u.username}
-          </option>
-        ))}
-      </select>
-
-      {/* Messages UI */}
-      <div className="bg-white/20 rounded-xl p-4 backdrop-blur-sm shadow-md mb-6 h-72 overflow-y-auto">
-        {messages.map((msg) => (
-          <div
-            key={msg._id}
-            className={`mb-3 flex ${msg.senderId === user.id ? "justify-end" : "justify-start"}`}
-          >
-            <div
-              className={`bg-white/30 p-3 rounded-lg max-w-xs ${
-                msg.senderId === user.id ? "text-right" : "text-left"
-              }`}
-            >
-              <p className="text-sm text-white/80">{msg.senderId === user.id ? "You" : "Them"}</p>
-              <p className="text-white font-medium">{msg.content}</p>
-            </div>
-          </div>
-        ))}
+    <div className="main-container">
+      {/* Sidebar */}
+      <div className="sidebar">
+        <div className="nav-list">
+          <NavItem to="/home" icon={<FaHome />} label="Home" />
+          <NavItem to="/explore" icon={<FaHashtag />} label="Explore" />
+          <NavItem to="/notifications" icon={<FaBell />} label="Notifications" />
+          <NavItem to="/messages" icon={<FaEnvelope />} label="Messages" />
+          <NavItem to="/bookmarks" icon={<FaBookmark />} label="Bookmarks" />
+          <NavItem to="/profile" icon={<FaUser />} label="Profile" />
+          <NavItem to="/more" icon={<FaEllipsisH />} label="More" />
+        </div>
       </div>
 
-      {/* Message Input */}
-      <div className="flex gap-2">
-        <input
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type your message"
-          className="flex-grow p-2 rounded-lg text-black"
-        />
-        <button
-          onClick={handleSend}
-          className="bg-white text-purple-600 font-bold px-4 py-2 rounded-full hover:bg-gray-100 transition"
+      {/* Messages Section */}
+      <div className="messages-container">
+        <h1 className="messages-title">
+          <FaEnvelope /> Messages
+        </h1>
+
+        {/* User Picker */}
+        <select
+          value={receiverId}
+          onChange={(e) => setReceiverId(e.target.value)}
+          className="receiver-select"
         >
-          Send
-        </button>
+          <option value="">Select a user to message</option>
+          {followedUsers.map((u) => (
+            <option key={u._id} value={u._id}>
+              {u.username}
+            </option>
+          ))}
+        </select>
+
+        {/* Messages UI */}
+        <div className="messages-box">
+          {messages.map((msg) => (
+            <div
+              key={msg._id}
+              className={`message-row ${msg.senderId === user.id ? "you" : "them"}`}
+            >
+              <div className="message-bubble">
+                <p className="message-meta">{msg.senderId === user.id ? "You" : "Them"}</p>
+                <p>{msg.content}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Message Input */}
+        <div className="message-input-wrapper">
+          <input
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder="Type your message"
+            className="message-input"
+          />
+          <button
+            onClick={handleSend}
+            className="send-button"
+          >
+            Send
+          </button>
+        </div>
       </div>
     </div>
   );
 };
+
+const NavItem = ({ to, icon, label }) => (
+  <Link to={to} className="nav-item" style={{ textDecoration: "none" }}>
+    <div>{icon}</div>
+    <span>{label}</span>
+  </Link>
+);
 
 export default MessagesPage;
