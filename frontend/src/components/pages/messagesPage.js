@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import {
   FaHome,
@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 import "../../css/base.css";
 import "../../css/messagesPage.css";
 
-// Debounce function to delay the API calls
+// Debounce function
 const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
@@ -32,23 +32,25 @@ const useDebounce = (value, delay) => {
 };
 
 const MessagesPage = () => {
-  const user = getUserInfo();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const userData = getUserInfo();
+    setUser(userData);
+  }, []);
+
   const [allUsers, setAllUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [receiverId, setReceiverId] = useState("");
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [conversations, setConversations] = useState([]);
-  const [userError, setUserError] = useState(null); // To store user fetch errors
-  const [messagesError, setMessagesError] = useState(null); // To store message fetch errors
+  const [userError, setUserError] = useState(null);
+  const [messagesError, setMessagesError] = useState(null);
 
-  // Use debounce for search input
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  // Fetch all users
   useEffect(() => {
-    if (!user) return;
-
     axios
       .get("http://localhost:8081/user/getAll")
       .then((res) => setAllUsers(res.data))
@@ -56,9 +58,9 @@ const MessagesPage = () => {
         setUserError("Failed to fetch users. Please try again later.");
         console.error("Failed to fetch users:", err);
       });
-  }, [user]);
+  }, []);
 
-  // Fetch all conversations for the current user
+  // Fetch conversations for current user
   useEffect(() => {
     if (!user?.id) return;
 
@@ -121,30 +123,26 @@ const MessagesPage = () => {
     return userObj ? userObj.username : "Unknown";
   };
 
-  // Filter and sort users
   const filteredUsers = allUsers
     .filter(
       (u) =>
         u.username.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) &&
-        u._id !== user.id
+        u._id !== user?.id
     )
     .sort((a, b) => {
       const usernameA = a.username.toLowerCase();
       const usernameB = b.username.toLowerCase();
 
-      // Compare alphabetically first
       if (usernameA < usernameB) return -1;
       if (usernameA > usernameB) return 1;
 
-      // If the usernames are the same, compare numerically (if one is a number)
       const isAValueNumeric = !isNaN(usernameA);
       const isBValueNumeric = !isNaN(usernameB);
 
-      // If one is numeric and the other isn't, place the numeric one last
       if (isAValueNumeric && !isBValueNumeric) return 1;
       if (!isAValueNumeric && isBValueNumeric) return -1;
 
-      return 0; // If both are equal, keep their order
+      return 0;
     });
 
   return (
@@ -206,12 +204,12 @@ const MessagesPage = () => {
               <div
                 key={msg._id}
                 className={`message-row ${
-                  msg.senderId === user.id ? "you" : "them"
+                  msg.senderId === user?.id ? "you" : "them"
                 }`}
               >
                 <div className="message-bubble">
                   <p className="message-meta">
-                    {msg.senderId === user.id ? "You" : "Them"}
+                    {msg.senderId === user?.id ? "You" : "Them"}
                   </p>
                   <p>{msg.content}</p>
                 </div>
@@ -243,7 +241,7 @@ const MessagesPage = () => {
           ) : (
             conversations.map((conv, i) => {
               const otherUser =
-                conv._id.sender === user.id
+                conv._id.sender === user?.id
                   ? conv._id.receiver
                   : conv._id.sender;
 

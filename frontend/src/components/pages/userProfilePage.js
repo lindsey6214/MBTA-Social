@@ -27,8 +27,8 @@ const UserProfile = () => {
   const [user, setUser] = useState(null);
   const [userPosts, setUserPosts] = useState([]);
   const [editMode, setEditMode] = useState(false);
-  const [password, setPassword] = useState(""); // Local state for the password field
-  const [profilePicture, setProfilePicture] = useState(null); // State for profile picture
+  const [password, setPassword] = useState("");
+  const [profilePicture, setProfilePicture] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,24 +36,31 @@ const UserProfile = () => {
     if (!userInfo) {
       navigate("/login");
     } else {
-      setUser(userInfo);
-
-      // Fetch posts only after userInfo is available
-      fetch(`http://localhost:8081/posts/user/${userInfo._id}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.message) {
-            console.log(data.message); // Handle no posts found scenario
-          } else {
-            setUserPosts(data); // Set user posts if they exist
-          }
-        })
-        .catch((err) => console.error("Failed to fetch posts", err));
+      setUser(userInfo);  // Set user state
+  
+      // Make sure user._id is available before sending the request
+      if (userInfo._id) {
+        fetch(`http://localhost:8081/posts/user/${userInfo._id}`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (Array.isArray(data)) {
+              setUserPosts(data);
+            } else {
+              setUserPosts([]);
+              console.log(data.message || "Unexpected response format");
+            }
+          })
+          .catch((err) => {
+            console.error("Failed to fetch posts", err);
+            setUserPosts([]);
+          });
+      } else {
+        console.error("User ID is not available");
+      }
     }
-  }, [navigate]);
+  }, [navigate]);  
 
   const handleSave = () => {
-    // Handle password change here (you may want to send an API request to update the password)
     if (password) {
       fetch("http://localhost:8081/user/editUser", {
         method: "POST",
@@ -62,16 +69,15 @@ const UserProfile = () => {
         },
         body: JSON.stringify({
           userId: user._id,
-          password: password, // Only update password
+          password: password,
         }),
       })
         .then((response) => response.json())
         .then((data) => {
           if (data.accessToken) {
-            // You might want to update the user session or show a success message
             setUser({ ...user, accessToken: data.accessToken });
-            setEditMode(false); // Exit edit mode
-            setPassword(""); // Clear password input field
+            setEditMode(false);
+            setPassword("");
           } else {
             console.log("Failed to update password:", data);
           }
@@ -83,24 +89,21 @@ const UserProfile = () => {
   const handleProfilePictureChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setProfilePicture(URL.createObjectURL(file)); // Show preview of the image
+      setProfilePicture(URL.createObjectURL(file));
 
-      // Create form data for the image upload
       const formData = new FormData();
       formData.append("profilePicture", file);
-      
-      // Upload the image to the backend
+
       fetch(`http://localhost:8081/user/uploadProfilePicture`, {
         method: "POST",
         body: formData,
         headers: {
-          Authorization: `Bearer ${user.accessToken}`, // Assuming you use token for auth
+          Authorization: `Bearer ${user.accessToken}`,
         },
       })
         .then((response) => response.json())
         .then((data) => {
           if (data.success) {
-            // Update the user's profile with the new image URL
             setUser({ ...user, profilePicture: data.profilePictureUrl });
           } else {
             console.log("Failed to upload profile picture:", data.message);
@@ -142,7 +145,7 @@ const UserProfile = () => {
                 <Form.Label>Upload Profile Picture</Form.Label>
                 <Form.Control
                   type="file"
-                  onChange={handleProfilePictureChange} // Handle file change
+                  onChange={handleProfilePictureChange}
                 />
               </Form.Group>
             </div>
@@ -160,7 +163,7 @@ const UserProfile = () => {
                     <Form.Control
                       type="password"
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)} // Update password
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </Form.Group>
                 ) : null}
