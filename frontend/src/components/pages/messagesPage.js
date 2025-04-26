@@ -62,25 +62,25 @@ const MessagesPage = () => {
 
   // Fetch conversations for current user
   useEffect(() => {
-    if (!user?.id) return;
+    if (!user?._id) return;
 
     axios
-      .get(`http://localhost:8081/messages/conversations/${user.id}`)
+      .get(`http://localhost:8081/messages/conversations/${user._id}`)
       .then((res) => setConversations(res.data))
       .catch((err) => {
         setMessagesError("Failed to load conversations. Please try again later.");
         console.error("Failed to load conversations:", err);
       });
-  }, [user?.id]);
+  }, [user?._id]);
 
   // Fetch messages with selected receiver
   useEffect(() => {
-    if (!user?.id || !receiverId) return;
+    if (!user?._id || !receiverId) return;
 
     axios
       .get("http://localhost:8081/messages/conversation", {
         params: {
-          senderId: user.id,
+          senderId: user._id,
           receiverId: receiverId,
         },
       })
@@ -89,13 +89,13 @@ const MessagesPage = () => {
         setMessagesError("Failed to load messages. Please try again later.");
         console.error("Message fetch error:", err);
       });
-  }, [user?.id, receiverId]);
+  }, [user?._id, receiverId]);
 
   const handleSend = async () => {
     if (!newMessage.trim() || !receiverId) return;
 
     const payload = {
-      senderId: user.id,
+      senderId: user._id,
       receiverId,
       content: newMessage,
     };
@@ -127,7 +127,7 @@ const MessagesPage = () => {
     .filter(
       (u) =>
         u.username.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) &&
-        u._id !== user?.id
+        u._id !== user?._id
     )
     .sort((a, b) => {
       const usernameA = a.username.toLowerCase();
@@ -204,12 +204,12 @@ const MessagesPage = () => {
               <div
                 key={msg._id}
                 className={`message-row ${
-                  msg.senderId === user?.id ? "you" : "them"
+                  msg.senderId === user?._id ? "you" : "them"
                 }`}
               >
                 <div className="message-bubble">
                   <p className="message-meta">
-                    {msg.senderId === user?.id ? "You" : "Them"}
+                    {msg.senderId === user?._id ? "You" : "Them"}
                   </p>
                   <p>{msg.content}</p>
                 </div>
@@ -241,7 +241,7 @@ const MessagesPage = () => {
           ) : (
             conversations.map((conv, i) => {
               const otherUser =
-                conv._id.sender === user?.id
+                conv._id.sender === user?._id
                   ? conv._id.receiver
                   : conv._id.sender;
 
