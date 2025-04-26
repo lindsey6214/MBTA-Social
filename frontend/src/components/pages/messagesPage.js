@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import {
   FaHome,
@@ -14,6 +14,23 @@ import { Link } from "react-router-dom";
 import "../../css/base.css";
 import "../../css/messagesPage.css";
 
+// Debounce function to delay the API calls
+const useDebounce = (value, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
+
 const MessagesPage = () => {
   const user = getUserInfo();
   const [allUsers, setAllUsers] = useState([]);
@@ -22,6 +39,11 @@ const MessagesPage = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [conversations, setConversations] = useState([]);
+  const [userError, setUserError] = useState(null); // To store user fetch errors
+  const [messagesError, setMessagesError] = useState(null); // To store message fetch errors
+
+  // Use debounce for search input
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   // Fetch all users
   useEffect(() => {
@@ -30,7 +52,10 @@ const MessagesPage = () => {
     axios
       .get("http://localhost:8081/user/getAll")
       .then((res) => setAllUsers(res.data))
-      .catch((err) => console.error("Failed to fetch users:", err));
+      .catch((err) => {
+        setUserError("Failed to fetch users. Please try again later.");
+        console.error("Failed to fetch users:", err);
+      });
   }, [user]);
 
   // Fetch all conversations for the current user
@@ -40,7 +65,10 @@ const MessagesPage = () => {
     axios
       .get(`http://localhost:8081/messages/conversations/${user.id}`)
       .then((res) => setConversations(res.data))
-      .catch((err) => console.error("Failed to load conversations:", err));
+      .catch((err) => {
+        setMessagesError("Failed to load conversations. Please try again later.");
+        console.error("Failed to load conversations:", err);
+      });
   }, [user?.id]);
 
   // Fetch messages with selected receiver
@@ -55,7 +83,10 @@ const MessagesPage = () => {
         },
       })
       .then((res) => setMessages(res.data))
-      .catch((err) => console.error("Message fetch error:", err));
+      .catch((err) => {
+        setMessagesError("Failed to load messages. Please try again later.");
+        console.error("Message fetch error:", err);
+      });
   }, [user?.id, receiverId]);
 
   const handleSend = async () => {
@@ -75,6 +106,7 @@ const MessagesPage = () => {
       setMessages((prev) => [...prev, res.data]);
       setNewMessage("");
     } catch (err) {
+      setMessagesError("Failed to send the message. Please try again.");
       console.error("Send error:", err);
     }
   };
@@ -93,7 +125,7 @@ const MessagesPage = () => {
   const filteredUsers = allUsers
     .filter(
       (u) =>
-        u.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        u.username.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) &&
         u._id !== user.id
     )
     .sort((a, b) => {
@@ -136,6 +168,9 @@ const MessagesPage = () => {
           <FaEnvelope /> Messages
         </h1>
 
+        {/* Error Handling for Users */}
+        {userError && <p className="error-message">{userError}</p>}
+
         {/* User Search */}
         <input
           type="text"
@@ -145,7 +180,7 @@ const MessagesPage = () => {
           className="receiver-select"
         />
 
-        {searchTerm &&
+        {debouncedSearchTerm &&
           filteredUsers.length > 0 &&
           filteredUsers.map((u) => (
             <div
@@ -157,27 +192,34 @@ const MessagesPage = () => {
             </div>
           ))}
 
-        {searchTerm && filteredUsers.length === 0 && (
+        {debouncedSearchTerm && filteredUsers.length === 0 && (
           <p className="no-user-found">User does not exist</p>
         )}
 
+        {/* Error Handling for Messages */}
+        {messagesError && <p className="error-message">{messagesError}</p>}
+
         {/* Current Conversation UI */}
         <div className="messages-box">
-          {messages.map((msg) => (
-            <div
-              key={msg._id}
-              className={`message-row ${
-                msg.senderId === user.id ? "you" : "them"
-              }`}
-            >
-              <div className="message-bubble">
-                <p className="message-meta">
-                  {msg.senderId === user.id ? "You" : "Them"}
-                </p>
-                <p>{msg.content}</p>
+          {messages.length > 0 ? (
+            messages.map((msg) => (
+              <div
+                key={msg._id}
+                className={`message-row ${
+                  msg.senderId === user.id ? "you" : "them"
+                }`}
+              >
+                <div className="message-bubble">
+                  <p className="message-meta">
+                    {msg.senderId === user.id ? "You" : "Them"}
+                  </p>
+                  <p>{msg.content}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="no-messages">No messages yet</p>
+          )}
         </div>
 
         {/* Message Input */}
@@ -196,28 +238,32 @@ const MessagesPage = () => {
         {/* Previous Conversations List */}
         <div className="conversation-list">
           <h2>Previous Conversations</h2>
-          {conversations.map((conv, i) => {
-            const otherUser =
-              conv._id.sender === user.id
-                ? conv._id.receiver
-                : conv._id.sender;
+          {conversations.length === 0 ? (
+            <p className="no-conversations">No conversations yet</p>
+          ) : (
+            conversations.map((conv, i) => {
+              const otherUser =
+                conv._id.sender === user.id
+                  ? conv._id.receiver
+                  : conv._id.sender;
 
-            const lastMsg =
-              conv.messages.length > 0
-                ? conv.messages[conv.messages.length - 1].content
-                : "";
+              const lastMsg =
+                conv.messages.length > 0
+                  ? conv.messages[conv.messages.length - 1].content
+                  : "";
 
-            return (
-              <div
-                key={i}
-                className="conversation-item"
-                onClick={() => handleSelectUser(otherUser)}
-              >
-                <strong>{getUsername(otherUser)}</strong>
-                <p className="last-message-preview">{lastMsg}</p>
-              </div>
-            );
-          })}
+              return (
+                <div
+                  key={i}
+                  className="conversation-item"
+                  onClick={() => handleSelectUser(otherUser)}
+                >
+                  <strong>{getUsername(otherUser)}</strong>
+                  <p className="last-message-preview">{lastMsg}</p>
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
     </div>
