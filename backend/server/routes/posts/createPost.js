@@ -17,7 +17,7 @@ const extractMentions = (text) => {
 
 // Create a new post with moderation and mention validation
 router.post("/createPost", moderationMiddleware, async (req, res) => {
-  const { userId, content, mediaUris, username } = req.body;
+  const { userId, content, mediaUris, username, latitude, longitude } = req.body;
 
   try {
     // Validate that the author exists
@@ -33,8 +33,6 @@ router.post("/createPost", moderationMiddleware, async (req, res) => {
 
     // Extract mentioned usernames
     const mentionedUsernames = extractMentions(content);
-
-    // Validate mentioned usernames
     const mentionedUsers = await User.find({ username: { $in: mentionedUsernames } });
     const validUsernames = mentionedUsers.map(u => u.username);
     const invalidMentions = mentionedUsernames.filter(u => !validUsernames.includes(u));
@@ -45,17 +43,25 @@ router.post("/createPost", moderationMiddleware, async (req, res) => {
       });
     }
 
-    // Create the new post
-    const newPost = new Post({
-      userId,
-      username,
-      content,
-      mediaUris,
-      moderationFlag: req.censored ? "censored" : "clean",
-      mentions: validUsernames,
-    });
+const postData = {
+  userId,
+  username,
+  content,
+  mediaUris,
+  moderationFlag: req.censored ? "censored" : "clean",
+  mentions: validUsernames
+};
 
-    const savedPost = await newPost.save();
+// Only add location if both latitude and longitude are present
+if (latitude && longitude) {
+  postData.location = {
+    type: "Point",
+    coordinates: [parseFloat(longitude), parseFloat(latitude)]
+  };
+}
+
+const newPost = new Post(postData);
+const savedPost = await newPost.save();
 
     res.status(201).json(savedPost);
   } catch (error) {
@@ -63,5 +69,6 @@ router.post("/createPost", moderationMiddleware, async (req, res) => {
     res.status(500).json({ message: "Error trying to create new post" });
   }
 });
+
 
 module.exports = router;
