@@ -32,7 +32,7 @@ const getFollowing = require("./routes/following/getFollowing");
 const removeFollower = require("./routes/following/removeFollower");
 const unfollowTrainLine = require("./routes/following/unfollowTrainLine");
 const unfollowUser = require("./routes/following/unfollowUser");
-
+const messageRoutes = require("./routes/messaging/messageRoutes");
 
 dotenv.config();
 
@@ -106,12 +106,8 @@ dbConnection()
     app.use("/following", followRequest);
     app.use("/following", removeFollower);
 
-    app.use("/messages", require("./routes/messageRoutes"));
-
-
-    app.use("/messages", require("./routes/messageRoutes"));
-
-
+    // Message routes
+    app.use("/messages", messageRoutes);
 
     // Global error handler
     app.use((err, req, res, next) => {

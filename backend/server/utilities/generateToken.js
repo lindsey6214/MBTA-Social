@@ -9,9 +9,9 @@ const generateAccessToken = (userId, email, username) => {
   }
 
   return jwt.sign(
-    { id: userId, email, username }, // Removed password from payload
+    { _id: userId, email, username },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "15m" } // Adjusted expiration time for better usability
+    { expiresIn: "15m" }
   );
 };
 

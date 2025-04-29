@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-import getUserInfo from "../../utilities/decodeJwt";
-import { Form } from "react-bootstrap"; // For form elements
-import { FaHome, FaUser, FaBell, FaEnvelope, FaHashtag, FaBookmark, FaUserCircle, FaEllipsisH } from 'react-icons/fa';
+import { Form } from "react-bootstrap";
+import {
+  FaHome,
+  FaUser,
+  FaBell,
+  FaEnvelope,
+  FaHashtag,
+  FaBookmark,
+  FaEllipsisH,
+} from "react-icons/fa";
 import { Link } from "react-router-dom";
-import '../../css/userProfilePage.css';
-import '../../css/base.css';
+import "../../css/userProfilePage.css";
+import "../../css/base.css";
+import getUserInfo from "../../utilities/decodeJwt";
 
 const NavItem = ({ to, icon, label }) => (
-  <Link to={to} className="nav-item" style={{textDecoration: "none"}}>
+  <Link to={to} className="nav-item" style={{ textDecoration: "none" }}>
     <div>{icon}</div>
     <span>{label}</span>
   </Link>
@@ -19,94 +25,184 @@ const NavItem = ({ to, icon, label }) => (
 const UserProfile = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [user, setUser] = useState(null);
+  const [userPosts, setUserPosts] = useState([]);
+  const [editMode, setEditMode] = useState(false);
+  const [password, setPassword] = useState("");
+  const [profilePicture, setProfilePicture] = useState(null);
   const navigate = useNavigate();
-  const [editMode, setEditMode] = useState(false); // For toggling edit mode
 
   useEffect(() => {
     const userInfo = getUserInfo();
-  if (!userInfo) {
-    navigate("/login"); // Redirect if not authenticated
-  } else {
-    setUser(userInfo);
-  }
-}, [navigate]);
+    if (!userInfo) {
+      navigate("/login");
+    } else {
+      setUser(userInfo);  // Set user state
+  
+      // Make sure user._id is available before sending the request
+      if (userInfo._id) {
+        fetch(`http://localhost:8081/posts/user/${userInfo._id}`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (Array.isArray(data)) {
+              setUserPosts(data);
+            } else {
+              setUserPosts([]);
+              console.log(data.message || "Unexpected response format");
+            }
+          })
+          .catch((err) => {
+            console.error("Failed to fetch posts", err);
+            setUserPosts([]);
+          });
+      } else {
+        console.error("User ID is not available");
+      }
+    }
+  }, [navigate]);  
 
   const handleSave = () => {
-    // Implement save logic (e.g., save updated user details to the backend)
-    setEditMode(false);
+    if (password) {
+      fetch("http://localhost:8081/user/editUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user._id,
+          password: password,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.accessToken) {
+            setUser({ ...user, accessToken: data.accessToken });
+            setEditMode(false);
+            setPassword("");
+          } else {
+            console.log("Failed to update password:", data);
+          }
+        })
+        .catch((error) => console.error("Error saving password:", error));
+    }
+  };
+
+  const handleProfilePictureChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfilePicture(URL.createObjectURL(file));
+
+      const formData = new FormData();
+      formData.append("profilePicture", file);
+
+      fetch(`http://localhost:8081/user/uploadProfilePicture`, {
+        method: "POST",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${user.accessToken}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            setUser({ ...user, profilePicture: data.profilePictureUrl });
+          } else {
+            console.log("Failed to upload profile picture:", data.message);
+          }
+        })
+        .catch((error) => console.error("Error uploading profile picture:", error));
+    }
   };
 
   if (!user) return <div>Loading...</div>;
 
-
   return (
     <div className="main-container">
-
-{/* Sidebar */}
-<div className="sidebar">
-    <div className="nav-list">
-      <NavItem to="/home" icon={<FaHome />} label="Home" />
-      <NavItem to="/explore" icon={<FaHashtag />} label="Explore" />
-      <NavItem to="/notifications" icon={<FaBell />} label="Notifications" />
-      <NavItem to="/messages" icon={<FaEnvelope />} label="Messages" />
-      <NavItem to="/bookmarks" icon={<FaBookmark />} label="Bookmarks" />
-      <NavItem to="/profile" icon={<FaUser />} label="Profile" />
-      <NavItem to="/more" icon={<FaEllipsisH />} label="More" />
-    </div>
-  </div>
-
-  <div className="main-content">
-    <div className="container">
-      <div className="row">
-        <div className="col-md-4 text-center">
-          {/* Profile Picture Section */}
-          <img
-            src={user.profilePicture || "default-profile.jpg"}
-            alt="Profile"
-            className="profile-img"
-          />
+      {/* Sidebar */}
+      <div className="sidebar">
+        <div className="nav-list">
+          <NavItem to="/home" icon={<FaHome />} label="Home" />
+          <NavItem to="/explore" icon={<FaHashtag />} label="Explore" />
+          <NavItem to="/notifications" icon={<FaBell />} label="Notifications" />
+          <NavItem to="/messages" icon={<FaEnvelope />} label="Messages" />
+          <NavItem to="/bookmarks" icon={<FaBookmark />} label="Bookmarks" />
+          <NavItem to="/profile" icon={<FaUser />} label="Profile" />
+          <NavItem to="/more" icon={<FaEllipsisH />} label="More" />
         </div>
+      </div>
 
-        <div className="col-md-8">
-          {/* User Info Section */}
-          <h1>{user.username}</h1>
-          {editMode ? (
-            <div>
+      {/* Main Content */}
+      <div className="main-content">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-4 text-center">
+              <img
+                src={user.profilePicture || "default-profile.jpg"}
+                alt="Profile"
+                className="profile-img"
+              />
+              {/* Profile picture upload input */}
               <Form.Group>
-                <Form.Label>Full Name</Form.Label>
-                <Form.Control type="text" defaultValue={user.fullName} />
+                <Form.Label>Upload Profile Picture</Form.Label>
+                <Form.Control
+                  type="file"
+                  onChange={handleProfilePictureChange}
+                />
               </Form.Group>
-
-              <Form.Group>
-                <Form.Label>Email</Form.Label>
-                <Form.Control type="email" defaultValue={user.email} />
-              </Form.Group>
-
-              <Form.Group>
-                <Form.Label>Bio</Form.Label>
-                <Form.Control as="textarea" defaultValue={user.bio} />
-              </Form.Group>
-
-              <button onClick={handleSave} className="save-button">
-                Save Changes
-              </button>
             </div>
-          ) : (
-            <div>
-              <p><strong>Full Name:</strong> {user.fullName}</p>
-              <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Bio:</strong> {user.bio}</p>
 
-              <button onClick={() => setEditMode(true)} className="edit-button">
-                    Edit Profile
+            <div className="col-md-8">
+              <h1>{user.username}</h1>
+              <div>
+                <p>
+                  <strong>Email:</strong> {user.email}
+                </p>
+
+                {editMode ? (
+                  <Form.Group>
+                    <Form.Label>New Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </Form.Group>
+                ) : null}
+
+                {editMode ? (
+                  <button onClick={handleSave} className="save-button">
+                    Save Changes
                   </button>
+                ) : (
+                  <button onClick={() => setEditMode(true)} className="edit-button">
+                    Edit Password
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* User Posts Section */}
+          <div className="user-posts mt-4">
+            <h2>{user.username}'s Posts</h2>
+            {userPosts.length === 0 ? (
+              <p>This user hasn't posted anything yet.</p>
+            ) : (
+              userPosts.map((post) => (
+                <div
+                  key={post._id}
+                  className="post-card mb-3 p-3 shadow-sm border rounded"
+                >
+                  <p>{post.content}</p>
+                  <small className="text-muted">
+                    {new Date(post.timestamp).toLocaleString()}
+                  </small>
                 </div>
-          )}
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
   );
 };
 

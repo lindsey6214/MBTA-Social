@@ -99,3 +99,140 @@
 .nav-item:hover {
   color: #e3056c;
 }
+
+.search-bar {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.search-results {
+  background: white;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.search-result-item {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.search-result-item:hover {
+  background-color: #eee;
+}
+
+.no-user {
+  padding: 8px;
+  color: red;
+}
+
+.conversation-list {
+  margin-bottom: 20px;
+}
+
+.conversation-preview {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.conversation-preview:hover {
+  background-color: #f7f7f7;
+}
+
+.last-message {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.conversation-item {
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.conversation-item:hover {
+  background-color: pink;
+}
+
+/* Add hover effects for the sidebar nav items */
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #333;
+  transition: background-color 0.3s ease;
+}
+
+.nav-item:hover {
+  background-color: #f1f1f1; /* Light gray background on hover */
+  cursor: pointer;
+}
+
+.nav-item span {
+  margin-left: 10px;
+}
+
+/* Add hover effect for search results */
+.search-result {
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-result:hover {
+  background-color: #e0e0e0; /* Light gray on hover */
+}
+
+/* Hover effect for message rows */
+.message-row {
+  display: flex;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.message-row:hover {
+  background-color: #f9f9f9; /* Slight background change on hover */
+}
+
+.message-bubble {
+  max-width: 70%;
+  padding: 10px;
+  border-radius: 15px;
+  background-color: #f0f0f0;
+}
+
+.message-row.you .message-bubble {
+  background-color: #d1f8d1; /* Light green for 'you' */
+}
+
+.message-row.them .message-bubble {
+  background-color: #f1f1f1; /* Light gray for 'them' */
+}
+
+.message-meta {
+  font-size: 0.85em;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* Hover effect for conversation items */
+.conversation-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.conversation-item:hover {
+  background-color: #e0f7fa; /* Light blue background on hover */
+}
+
+.last-message-preview {
+  font-size: 0.9em;
+  color: #555;
+}

@@ -5,42 +5,21 @@ import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import getUserInfo from "../../utilities/decodeJwt";
 
 const PRIMARY_COLOR = "#cc5c99";
 const url = `${process.env.REACT_APP_BACKEND_SERVER_URI}/user/login`;
 
 const Login = () => {
-  const [user, setUser] = useState(null);
   const [data, setData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [showErrorModal, setShowErrorModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userInfo = getUserInfo();
-    if (!userInfo) {
-      localStorage.removeItem("accessToken");
-    }
-    setUser(userInfo);
-  }, []);
-
-  useEffect(() => {
-    // Check if the user is already logged in
-    const userInfo = getUserInfo(); // Decoding JWT or checking accessToken in localStorage
-    if (userInfo) {
-      setUser(userInfo); // Set user state if logged in
-      navigate("/home"); // Redirect to home if already logged in
-    } else {
-      const token = localStorage.getItem("accessToken");
-      if (token) {
-        // If accessToken exists, try to decode it and set user info
-        const decodedUser = getUserInfo(); // Decode and get user info from token
-        if (decodedUser) {
-          setUser(decodedUser);
-          navigate("/home");
-        }
-      }
+    // Check if the user is already logged in by checking token
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      navigate("/home"); // Redirect to home if token exists
     }
   }, [navigate]);
 
@@ -52,12 +31,15 @@ const Login = () => {
     e.preventDefault();
     try {
       const { data: res } = await axios.post(url, data, {
-      withCredentials: true,
+        withCredentials: true,
       });
-      localStorage.setItem("accessToken", res.accessToken);
-      localStorage.setItem("user", JSON.stringify(res.user));
 
-      navigate("/home");
+      // Log the response to verify the data structure
+      console.log("Login response:", res);
+
+      localStorage.setItem("accessToken", res.accessToken);
+
+      navigate("/home");  // Navigate to the home page after successful login
     } catch (error) {
       if (error.response?.status >= 400) {
         setError(error.response.data.message);
@@ -75,41 +57,43 @@ const Login = () => {
 
       {/* Right Side with Form */}
       <div className="landing-right">
-          <div className="landing-text-group">
-        <h1 className="landing-heading">
-          Welcome Back!
-        </h1>
-        <p className="landing-subtext">
-          Sign in to access your account.
-        </p>
+        <div className="landing-text-group">
+          <h1 className="landing-heading">Welcome Back!</h1>
+          <p className="landing-subtext">Sign in to access your account.</p>
 
           {/* Login Form */}
           <Form onSubmit={handleSubmit} className="landing-right-form">
             <Form.Group className="mb-3">
               <Form.Label
-                style={{ fontWeight: "bold", color: "white" }}>Email</Form.Label>
-                  <Form.Control
-                    type="email"
-                    name="email"
-                    onChange={handleChange}
-                    placeholder="Enter email"
-                    required
-                    style={{ color: "black", backgroundColor: "white" }} // White background, black text
-                  />
-                </Form.Group>
+                style={{ fontWeight: "bold", color: "white" }}
+              >
+                Email
+              </Form.Label>
+              <Form.Control
+                type="email"
+                name="email"
+                onChange={handleChange}
+                placeholder="Enter email"
+                required
+                style={{ color: "black", backgroundColor: "white" }} // White background, black text
+              />
+            </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label
-                style={{ fontWeight: "bold", color: "white" }}>Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    name="password"
-                    onChange={handleChange}
-                    placeholder="Password"
-                    required
-                    style={{ color: "black", backgroundColor: "white" }} // White background, black text
-                  />
-                </Form.Group>
+                style={{ fontWeight: "bold", color: "white" }}
+              >
+                Password
+              </Form.Label>
+              <Form.Control
+                type="password"
+                name="password"
+                onChange={handleChange}
+                placeholder="Password"
+                required
+                style={{ color: "black", backgroundColor: "white" }} // White background, black text
+              />
+            </Form.Group>
 
             <Button
               type="submit"
@@ -118,7 +102,10 @@ const Login = () => {
                 border: "none",
                 width: "100%",
               }}
-              className="auth-button">Log In</Button>
+              className="auth-button"
+            >
+              Log In
+            </Button>
           </Form>
 
           {/* Sign-up Link */}
@@ -136,7 +123,11 @@ const Login = () => {
       </div>
 
       {/* Error Modal */}
-      <Modal show={showErrorModal} onHide={() => setShowErrorModal(false)} centered>
+      <Modal
+        show={showErrorModal}
+        onHide={() => setShowErrorModal(false)}
+        centered
+      >
         <Modal.Header closeButton>
           <Modal.Title>Login Failed</Modal.Title>
         </Modal.Header>

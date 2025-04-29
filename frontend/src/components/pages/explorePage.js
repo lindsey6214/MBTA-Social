@@ -12,33 +12,55 @@ const ExplorePage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [commentCounts, setCommentCounts] = useState({});
 
   useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude } = position.coords;
-          try {
-            const res = await axios.get("http://localhost:8081/explore/nearby", {
-              params: { lat: latitude, lon: longitude },
-            });
-            setPosts(res.data);
-          } catch (err) {
-            setError("Failed to load nearby posts.");
-            console.error(err);
-          } finally {
-            setLoading(false);
-          }
-        },
-        () => {
-          setError("Location access denied.");
+    const fetchPosts = async () => {
+      try {
+        let res;
+        if ("geolocation" in navigator) {
+          navigator.geolocation.getCurrentPosition(
+            async (position) => {
+              const { latitude, longitude } = position.coords;
+              res = await axios.get("http://localhost:8081/explore/nearby", {
+                params: { lat: latitude, lon: longitude },
+              });
+              setPosts(res.data);
+              fetchCommentCounts(res.data);
+              setLoading(false);
+            },
+            () => {
+              setError("Location access denied.");
+              setLoading(false);
+            }
+          );
+        } else {
+          res = await axios.get('http://localhost:8081/posts/');
+          setPosts(res.data);
+          fetchCommentCounts(res.data);
           setLoading(false);
         }
-      );
-    } else {
-      setError("Geolocation not supported.");
-      setLoading(false);
-    }
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+        setError("Failed to load posts.");
+        setLoading(false);
+      }
+    };
+
+    const fetchCommentCounts = (posts) => {
+      posts.forEach(post => {
+        axios.get(`http://localhost:8081/comments/post/${post._id}`)
+          .then(res => {
+            setCommentCounts(prev => ({
+              ...prev,
+              [post._id]: res.data.length
+            }));
+          })
+          .catch(err => console.error('Error fetching comments for post:', post._id, err));
+      });
+    };
+
+    fetchPosts();
   }, []);
 
   const NavItem = ({ to, icon, label }) => (
@@ -51,6 +73,14 @@ const ExplorePage = () => {
   const filteredPosts = posts.filter((post) =>
     post.content.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const formatTimestamp = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString('en-US', {
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', hour12: true
+    });
+  };
 
   return (
     <div className="main-container">
@@ -83,21 +113,35 @@ const ExplorePage = () => {
         {error && <p className="error-message">{error}</p>}
 
         {filteredPosts.map((post) => (
-          <div key={post._id} className="post-card">
-            <div className="username">@{post.username}</div>
-            <p>{post.content}</p>
-            {post.mediaUris &&
-              (post.mediaUris.endsWith(".mp4") ? (
-                <video controls>
-                  <source src={`http://localhost:8081${post.mediaUris}`} type="video/mp4" />
-                </video>
-              ) : (
-                <img
-                  src={`http://localhost:8081${post.mediaUris}`}
-                  alt="Post media"
-                />
-              ))}
-          </div>
+          <Link
+            key={post._id}
+            to={`/post/${post._id}`}
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <div className="post-card">
+              <div className="username">@{post.username}</div>
+              <p>{post.content}</p>
+
+              {post.mediaUris && post.mediaUris.length > 0 && (
+                post.mediaUris[0].endsWith(".mp4") ? (
+                  <video controls>
+                    <source src={`http://localhost:8081${post.mediaUris[0]}`} type="video/mp4" />
+                  </video>
+                ) : (
+                  <img
+                    src={`http://localhost:8081${post.mediaUris[0]}`}
+                    alt="Post media"
+                  />
+                )
+              )}
+
+              <p className="post-timestamp">{formatTimestamp(post.timestamp)}</p>
+
+              <button className="comment-count-button">
+                💬 {commentCounts[post._id] ?? 0} Comments
+              </button>
+            </div>
+          </Link>
         ))}
       </div>
     </div>

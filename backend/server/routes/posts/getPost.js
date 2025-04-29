@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
 const Post = require("../../models/postModel");
 
 // Get all posts
@@ -17,13 +18,9 @@ router.get("/user/:userID", async (req, res) => {
     const { userID } = req.params;
 
     try {
-        const posts = await Post.find({ userID }).sort({ timestamp: -1 });
+        const posts = await Post.find({ userId: new mongoose.Types.ObjectId(userID) }).sort({ timestamp: -1 });
 
-        if (!posts.length) {
-            return res.status(404).json({ message: "No posts found for this user" });
-        }
-
-        return res.status(200).json(posts);
+        return res.status(200).json(posts);  // Always return array, even if empty
     } catch (error) {
         return res.status(500).json({ error: "Server error, unable to fetch posts" });
     }
