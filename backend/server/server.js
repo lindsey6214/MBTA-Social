@@ -24,7 +24,7 @@ const removeLike = require("./routes/likes/removeLike");
 const getLikesByPost = require("./routes/likes/getLikesByPost");
 const getUsersWhoLikedPost = require("./routes/likes/getUsersWhoLikedPost");
 const checkIfUserLiked = require("./routes/likes/checkIfUserLiked");
-
+const bookmark = require("./routes/bookmarks/bookmarkRoutes");
 const followRequest = require("./routes/following/followRequest");
 const followTrainLine = require("./routes/following/followTrainLine");
 const followUser = require("./routes/following/followUser");
@@ -67,6 +67,8 @@ dbConnection()
 
     app.use(express.json());
     app.use(morgan("dev")); // Logs HTTP requests
+
+    app.use("/bookmarks", bookmark);
 
     // User-related routes
     app.use("/user", loginRoute);

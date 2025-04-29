@@ -1,6 +1,27 @@
 ##api integration
 @baseUrl = http://localhost:3000/api/trainlines
 
+### Get bookmarks for a user
+GET http://localhost:8081/bookmarks/USER_ID_HERE
+Content-Type: application/json
+
+###
+
+### Add a new bookmark
+POST http://localhost:8081/bookmarks/add
+Content-Type: application/json
+
+{
+  "userId": "USER_ID_HERE",
+  "postId": "POST_ID_HERE"
+}
+
+###
+
+### Remove a bookmark
+DELETE http://localhost:8081/bookmarks/remove/USER_ID_HERE/POST_ID_HERE
+Content-Type: application/json
+
 POST http://localhost:8081/user/signup
 Content-Type: application/json 
 
