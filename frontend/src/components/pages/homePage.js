@@ -139,7 +139,7 @@ const HomePage = () => {
 };
 
 const NavItem = ({ to, icon, label }) => (
-  <Link to={to} className="nav-item" style={{ textDecoration: "none" }}>
+  <Link to={to} className="nav-item">
     <div>{icon}</div>
     <span>{label}</span>
   </Link>
