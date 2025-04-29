@@ -15,17 +15,32 @@ const newPostSchema = new mongoose.Schema(
       type: [String],
       validate: {
         validator: function (val) {
-          return val.length <= 4; // Limit to 4 items max
+          return val.length <= 4;
         },
         message: "A post can contain up to 4 images or videos."
-      },
+        },
       default: []
     },
     moderationFlag: { type: String, enum: ['clean', 'censored'], default: 'clean' },
     mentions: { type: [String], default: [] },
     timestamp: { type: Date, default: Date.now },
+
+    // 🚀 NEW field: location
+    location: {
+      type: {
+        type: String,
+        enum: ['Point'],
+        default: 'Point'
+      },
+      coordinates: {
+        type: [Number], // [longitude, latitude]
+        default: undefined
+      }
+    }
   },
   { collection: "posts" }
 );
+newPostSchema.index({ location: "2dsphere" });
+
 
 module.exports = mongoose.model("posts", newPostSchema);

@@ -51,15 +51,36 @@ const HomePage = () => {
 
   const handlePost = () => {
     if (!content.trim()) return;
-
-    axios.post('http://localhost:8081/posts/createPost', { username, userId, content })
-      .then(() => {
-        setContent('');
-        return axios.get('http://localhost:8081/posts/');
-      })
-      .then(response => setPosts(response.data))
-      .catch(error => console.error('Error creating post:', error));
+  
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+  
+          axios.post('http://localhost:8081/posts/createPost', {
+            username,
+            userId,
+            content,
+            latitude, // 🚀 send latitude
+            longitude // 🚀 send longitude
+          })
+          .then(() => {
+            setContent('');
+            return axios.get('http://localhost:8081/posts/');
+          })
+          .then(response => setPosts(response.data))
+          .catch(error => console.error('Error creating post:', error));
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+          alert("Location permission denied. Cannot create post without location.");
+        }
+      );
+    } else {
+      alert("Geolocation not supported by your browser.");
+    }
   };
+  
 
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);
