@@ -71,3 +71,18 @@
   color: #38bdf8 !important;
   font-weight: 600;
 }
+
+.comment-count-button {
+  margin-top: 0.5rem;
+  background: white;
+  color: #e3056c;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.comment-count-button:hover {
+  background: #f3f4f6;
+}
