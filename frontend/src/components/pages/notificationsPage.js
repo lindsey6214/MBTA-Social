@@ -6,7 +6,6 @@ import '../../css/base.css';
 import '../../css/notificationsPage.css'; 
 import axios from "axios";
 
-
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
   const [user, setUser] = useState(null);
@@ -15,7 +14,8 @@ const NotificationsPage = () => {
     const fetchedUser = getUserInfo();
     if (!fetchedUser) return;
     setUser(fetchedUser);
-  
+
+    // Fetch follow requests once
     axios.get(`http://localhost:8081/follow/requests/${fetchedUser._id}`)
       .then(res => {
         const formatted = res.data.map(reqUser => ({
@@ -29,19 +29,44 @@ const NotificationsPage = () => {
       })
       .catch(err => console.error("Error fetching follow requests:", err));
   }, []);
+
+  // Real-time polling for train line alerts
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchAlerts = () => {
+      axios.get(`http://localhost:8081/notifications/trainLineAlerts/${user._id}`)
+        .then(res => {
+          const trainAlerts = res.data.map(alert => ({
+            _id: alert.id,
+            message: `[${alert.lineName}] ${alert.header}`,
+            time: new Date(alert.updatedAt).toLocaleString(),
+            type: "train-alert"
+          }));
+
+          setNotifications(prev => {
+            const existingIds = new Set(prev.map(n => n._id));
+            const newAlerts = trainAlerts.filter(a => !existingIds.has(a._id));
+            return [...newAlerts, ...prev];
+          });
+        })
+        .catch(err => console.error("Error fetching train line alerts:", err));
+    };
+
+    fetchAlerts(); // fetch immediately
+    const interval = setInterval(fetchAlerts, 30000); // fetch every 30s
+    return () => clearInterval(interval);
+  }, [user]);
+
   const handleFollowRequest = async (requesterId, action) => {
     try {
       const endpoint = `http://localhost:8081/follow/request/${action}/${requesterId}`;
       await axios.post(endpoint, { currentUserId: user._id });
-  
-      // Remove this notification from UI
       setNotifications((prev) => prev.filter((n) => n._id !== requesterId));
     } catch (error) {
       console.error(`Error ${action}ing follow request:`, error);
     }
   };
-  
-  
 
   const NavItem = ({ to, icon, label }) => (
     <Link to={to} className="nav-item">
@@ -52,7 +77,6 @@ const NotificationsPage = () => {
 
   return (
     <div className="main-container">
-      {/* Sidebar */}
       <div className="sidebar">
         <div className="nav-list">
           <NavItem to="/home" icon={<FaHome />} label="Home" />
@@ -74,34 +98,33 @@ const NotificationsPage = () => {
           notifications.length > 0 ? (
             <div className="space-y-4">
               {notifications.map((note) => (
-  <div key={note._id} className="notification-card">
-    <div className="notification-content">
-      <FaUserCircle className="text-xl" />
-      <div>
-        <p className="notification-message">{note.message}</p>
-        <p className="notification-time">{note.time}</p>
-        {note.type === "follow-request" && (
-          <div style={{ marginTop: "10px" }}>
-            <button
-              onClick={() => handleFollowRequest(note._id, "accept")}
-              className="save-button"
-            >
-              Accept
-            </button>
-            <button
-              onClick={() => handleFollowRequest(note._id, "reject")}
-              className="edit-button"
-              style={{ marginLeft: "10px" }}
-            >
-              Deny
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  </div>
-))}
-
+                <div key={note._id} className="notification-card">
+                  <div className="notification-content">
+                    <FaUserCircle className="text-xl" />
+                    <div>
+                      <p className="notification-message">{note.message}</p>
+                      <p className="notification-time">{note.time}</p>
+                      {note.type === "follow-request" && (
+                        <div style={{ marginTop: "10px" }}>
+                          <button
+                            onClick={() => handleFollowRequest(note._id, "accept")}
+                            className="save-button"
+                          >
+                            Accept
+                          </button>
+                          <button
+                            onClick={() => handleFollowRequest(note._id, "reject")}
+                            className="edit-button"
+                            style={{ marginLeft: "10px" }}
+                          >
+                            Deny
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : (
             <p className="notification-fallback">No notifications yet.</p>

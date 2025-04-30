@@ -36,6 +36,7 @@ const messageRoutes = require("./routes/messaging/messageRoutes");
 const exploreRoutes = require('./routes/exploreRoutes');
 const homeFeed = require("./routes/posts/homeFeed");
 const getTrainLines = require("./routes/trainlines/getTrainLines");
+const getTrainLineAlerts = require("./routes/notifications/trainLineAlerts");
 
 dotenv.config();
 
@@ -112,6 +113,10 @@ dbConnection()
 
     // Train line routes
     app.use("/trainlines", getTrainLines);
+
+    // Notification routes
+    app.use("/notifications/trainLineAlerts", require("./routes/notifications/trainLineAlerts"));
+
 
     // Message routes
     app.use("/messages", messageRoutes);
