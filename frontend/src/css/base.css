@@ -49,7 +49,7 @@ darker grey: #222
   }
   
   .nav-item:hover {
-    color: #e3056c;
+    color: #e3056c !important;
     text-decoration: none;
   }
   

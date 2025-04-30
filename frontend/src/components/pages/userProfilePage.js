@@ -15,6 +15,7 @@ import {
 import { Link } from "react-router-dom";
 import "../../css/userProfilePage.css";
 import "../../css/base.css";
+import "../../css/feed.css";
 import getUserInfo from "../../utilities/decodeJwt";
 
 const NavItem = ({ to, icon, label }) => (
@@ -34,6 +35,9 @@ const UserProfile = () => {
   const [error, setError] = useState("");
   const [showErrorModal, setShowErrorModal] = useState(false);
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("posted");
+  const [likedPosts, setLikedPosts] = useState([]);
+  const [followedUsers, setFollowedUsers] = useState([]);
 
   useEffect(() => {
     const userInfo = getUserInfo();
@@ -41,26 +45,44 @@ const UserProfile = () => {
       navigate("/login");
     } else {
       setUser(userInfo);
-      if (userInfo._id) {
-        fetch(`http://localhost:8081/posts/user/${userInfo._id}`)
-          .then((res) => res.json())
-          .then((data) => {
-            if (Array.isArray(data)) {
-              setUserPosts(data);
-            } else {
-              setUserPosts([]);
-              console.log(data.message || "Unexpected response format");
-            }
-          })
-          .catch((err) => {
-            console.error("Failed to fetch posts", err);
-            setUserPosts([]);
-          });
-      } else {
-        console.error("User ID is not available");
-      }
+  
+      const fetchUserPosts = async () => {
+        try {
+          const res = await fetch(`http://localhost:8081/posts/user/${userInfo._id}`);
+          const data = await res.json();
+          setUserPosts(Array.isArray(data) ? data : []);
+        } catch (err) {
+          console.error("Failed to fetch user posts", err);
+          setUserPosts([]);
+        }
+      };
+  
+      const fetchLikedPosts = async () => {
+        try {
+          const res = await fetch(`http://localhost:8081/posts/liked/${userInfo._id}`);
+          const data = await res.json();
+          setLikedPosts(Array.isArray(data) ? data : []);
+        } catch (err) {
+          console.error("Failed to fetch liked posts", err);
+        }
+      };
+  
+      const fetchFollowedUsers = async () => {
+        try {
+          const res = await fetch(`http://localhost:8081/user/followed/${userInfo._id}`);
+          const data = await res.json();
+          setFollowedUsers(Array.isArray(data) ? data : []);
+        } catch (err) {
+          console.error("Failed to fetch followed posts", err);
+        }
+      };
+  
+      fetchUserPosts();
+      fetchLikedPosts();
+      fetchFollowedUsers();
     }
   }, [navigate]);
+
 
   const handleSave = async () => {
     const passwordRegex =
@@ -193,24 +215,48 @@ const UserProfile = () => {
             </div>
           </div>
 
-          {/* User Posts Section */}
+          <div className="post-tabs">
+            {["posted", "liked", "followed"].map((tab) => (
+              <div
+                key={tab}
+                className={`tab-item ${activeTab === tab ? "tab-active" : "tab-inactive"}`}
+                onClick={() => setActiveTab(tab)}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </div>
+            ))}
+          </div>
+
           <div className="user-posts mt-4">
-            <h2>{user.username}'s Posts</h2>
-            {userPosts.length === 0 ? (
-              <p>This user hasn't posted anything yet.</p>
-            ) : (
-              userPosts.map((post) => (
-                <div
-                  key={post._id}
-                  className="post-card mb-3 p-3 shadow-sm border rounded"
-                >
-                  <p>{post.content}</p>
-                  <small className="text-muted">
-                    {new Date(post.timestamp).toLocaleString()}
-                  </small>
-                </div>
-              ))
+            {activeTab === "posted" && userPosts.length === 0 && (
+              <h2>{user.username}'s Posted Posts</h2>
             )}
+            {activeTab === "liked" && likedPosts.length === 0 && (
+              <h2>{user.username}'s Liked Posts</h2>
+            )}
+            {activeTab === "followed" && followedUsers.length === 0 && (
+              <h2>{user.username}'s Followed Users</h2>
+            )}
+
+            {(() => {
+              const selectedPosts =
+                activeTab === "posted" ? userPosts :
+                activeTab === "liked" ? likedPosts :
+                followedUsers;
+
+              return selectedPosts.length === 0 ? (
+                <p>Nothing found in this category.</p>
+              ) : (
+                selectedPosts.map((post) => (
+                  <div key={post._id} className="post-card mb-3 p-3 shadow-sm border rounded">
+                    <p>{post.content}</p>
+                    <small className="text-muted">
+                      {new Date(post.timestamp).toLocaleString()}
+                    </small>
+                  </div>
+                ))
+              );
+            })()}
           </div>
         </div>
       </div>
@@ -230,5 +276,6 @@ const UserProfile = () => {
     </div>
   );
 };
+
 
 export default UserProfile;

@@ -115,7 +115,6 @@ const ExplorePage = () => {
   return (
     <div className="main-container">
       <div className="sidebar">
-      <Navbar />
         <div className="nav-list">
           <Link to="/home" className="nav-item"><FaHome /> Home</Link>
           <Link to="/explore" className="nav-item"><FaHashtag /> Explore</Link>
