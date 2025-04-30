@@ -14,6 +14,7 @@ import NotificationsPage from "./components/pages/notificationsPage";
 import MessagesPage from "./components/pages/messagesPage";
 import BookmarksPage from "./components/pages/bookmarksPage";
 import getUserInfo from "./utilities/decodeJwt";
+import PostDetailsPage from "./components/pages/postDetailsPage";
 
 
 
@@ -40,6 +41,7 @@ const App = () => {
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/messages" element={<MessagesPage />} />
           <Route path="/bookmarks" element={<BookmarksPage />} />
+          <Route path="/post/:postID" element={<PostDetailsPage />} />
         </Routes>
       </UserContext.Provider>
     </>
