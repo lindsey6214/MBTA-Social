@@ -2,13 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import {
-  FaHome,
-  FaUser,
-  FaBell,
-  FaEnvelope,
-  FaHashtag,
-  FaBookmark,
-  FaEllipsisH,
+  FaHome, FaUser, FaBell, FaEnvelope,
+  FaHashtag, FaBookmark, FaEllipsisH
 } from "react-icons/fa";
 import "../../css/base.css";
 
@@ -65,8 +60,9 @@ const FollowUsersPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="explore-container">
+      <div className="feed-container">
         <h1 className="text-2xl font-bold mb-4 text-white">🔍 Follow Users</h1>
+
         <input
           type="text"
           className="search-input mb-4"
@@ -75,19 +71,26 @@ const FollowUsersPage = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
 
-        {allUsers
-          .filter((u) => u.username.toLowerCase().includes(searchTerm.toLowerCase()))
-          .map((u) => (
-            <div key={u._id} className="user-card">
-              @{u.username}
-              <button
-                onClick={() => handleFollowRequest(u._id)}
-                className="follow-request-button"
+        <div className="grid md:grid-cols-2 gap-4">
+          {allUsers
+            .filter((u) => u.username.toLowerCase().includes(searchTerm.toLowerCase()) && u._id !== userId)
+            .map((u) => (
+              <div
+                key={u._id}
+                className="bg-white/20 backdrop-blur p-4 rounded-lg text-white shadow"
               >
-                Request to Follow
-              </button>
-            </div>
-          ))}
+                <h2 className="text-lg font-semibold">@{u.username}</h2>
+                <div className="mt-4">
+                  <button
+                    onClick={() => handleFollowRequest(u._id)}
+                    className="bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded"
+                  >
+                    Request to Follow
+                  </button>
+                </div>
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );
