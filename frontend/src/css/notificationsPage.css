@@ -50,4 +50,19 @@
     font-size: 1.125rem;
     color: white;
   }
+
+  .save-button, .edit-button {
+    background-color: white;
+    color: #e3056c;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 9999px;
+    cursor: pointer;
+    border: none;
+  }
+  
+  .save-button:hover, .edit-button:hover {
+    background-color: #f3f4f6;
+  }
+  
   

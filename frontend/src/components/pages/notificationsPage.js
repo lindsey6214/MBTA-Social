@@ -4,6 +4,8 @@ import { FaHome, FaUser, FaBell, FaEnvelope, FaHashtag, FaBookmark, FaUserCircle
 import { Link } from 'react-router-dom';
 import '../../css/base.css';
 import '../../css/notificationsPage.css'; 
+import axios from "axios";
+
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
@@ -13,19 +15,33 @@ const NotificationsPage = () => {
     const fetchedUser = getUserInfo();
     if (!fetchedUser) return;
     setUser(fetchedUser);
-    setNotifications([
-      {
-        _id: 1,
-        message: "Your post received a new like!",
-        time: "Just now",
-      },
-      {
-        _id: 2,
-        message: "You have a new follower.",
-        time: "2h ago",
-      },
-    ]);
+  
+    axios.get(`http://localhost:8081/follow/requests/${fetchedUser._id}`)
+      .then(res => {
+        const formatted = res.data.map(reqUser => ({
+          _id: reqUser._id,
+          message: `${reqUser.username} wants to follow you`,
+          username: reqUser.username,
+          time: "Just now",
+          type: "follow-request"
+        }));
+        setNotifications(formatted);
+      })
+      .catch(err => console.error("Error fetching follow requests:", err));
   }, []);
+  const handleFollowRequest = async (requesterId, action) => {
+    try {
+      const endpoint = `http://localhost:8081/follow/request/${action}/${requesterId}`;
+      await axios.post(endpoint, { currentUserId: user._id });
+  
+      // Remove this notification from UI
+      setNotifications((prev) => prev.filter((n) => n._id !== requesterId));
+    } catch (error) {
+      console.error(`Error ${action}ing follow request:`, error);
+    }
+  };
+  
+  
 
   const NavItem = ({ to, icon, label }) => (
     <Link to={to} className="nav-item">
@@ -58,16 +74,34 @@ const NotificationsPage = () => {
           notifications.length > 0 ? (
             <div className="space-y-4">
               {notifications.map((note) => (
-                <div key={note._id} className="notification-card">
-                  <div className="notification-content">
-                    <FaUserCircle className="text-xl" />
-                    <div>
-                      <p className="notification-message">{note.message}</p>
-                      <p className="notification-time">{note.time}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
+  <div key={note._id} className="notification-card">
+    <div className="notification-content">
+      <FaUserCircle className="text-xl" />
+      <div>
+        <p className="notification-message">{note.message}</p>
+        <p className="notification-time">{note.time}</p>
+        {note.type === "follow-request" && (
+          <div style={{ marginTop: "10px" }}>
+            <button
+              onClick={() => handleFollowRequest(note._id, "accept")}
+              className="save-button"
+            >
+              Accept
+            </button>
+            <button
+              onClick={() => handleFollowRequest(note._id, "reject")}
+              className="edit-button"
+              style={{ marginLeft: "10px" }}
+            >
+              Deny
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+))}
+
             </div>
           ) : (
             <p className="notification-fallback">No notifications yet.</p>

@@ -90,5 +90,17 @@ router.post("/follow/request/reject/:requesterId", async (req, res) => {
     res.status(500).json({ message: "Error rejecting request", error });
   }
 });
+// Get follow requests for the current user
+router.get("/follow/requests/:userId", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId).populate("followRequests", "username email");
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json(user.followRequests);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch follow requests", error });
+  }
+});
+
 
 module.exports = router;
