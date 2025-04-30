@@ -131,7 +131,6 @@ const HomePage = () => {
           <NavItem to="/profile" icon={<FaUser />} label="Profile" />
           <NavItem to="/more" icon={<FaEllipsisH />} label="More" />
         </div>
-        <button className="post-button" onClick={handlePost}>Post</button>
       </div>
 
       <div className="feed-container">
