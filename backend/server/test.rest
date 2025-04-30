@@ -37,7 +37,7 @@ Content-Type: application/json
 
 {
     "email" : "lindseymcgovern04@gmail.com",
-    "password" : "Sharon122!"
+    "password" : "Mirrorball1989!"
 }
 
 ### Make User an Admin
@@ -54,14 +54,15 @@ Content-Type: application/json
 GET http://localhost:8081/user/getAll
 Content-Type: application/json
 
-###
+### Update password
 POST http://localhost:8081/user/editUser
 Content-Type: application/json 
 
 {
     "userId" : "67e9b2cf929242eb614074af",
     "username" : "User5g9fdw",
-    "password" : "Sharon122!"
+    "email" : "lindseymcgovern04@gmail.com",
+    "password" : "Mirrorball1989!"
 }
 
 ###

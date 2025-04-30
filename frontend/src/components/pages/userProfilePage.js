@@ -1,3 +1,5 @@
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form } from "react-bootstrap";
@@ -29,6 +31,8 @@ const UserProfile = () => {
   const [editMode, setEditMode] = useState(false);
   const [password, setPassword] = useState("");
   const [profilePicture, setProfilePicture] = useState(null);
+  const [error, setError] = useState("");
+  const [showErrorModal, setShowErrorModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,9 +40,7 @@ const UserProfile = () => {
     if (!userInfo) {
       navigate("/login");
     } else {
-      setUser(userInfo);  // Set user state
-  
-      // Make sure user._id is available before sending the request
+      setUser(userInfo);
       if (userInfo._id) {
         fetch(`http://localhost:8081/posts/user/${userInfo._id}`)
           .then((res) => res.json())
@@ -58,31 +60,40 @@ const UserProfile = () => {
         console.error("User ID is not available");
       }
     }
-  }, [navigate]);  
+  }, [navigate]);
 
-  const handleSave = () => {
-    if (password) {
-      fetch("http://localhost:8081/user/editUser", {
+  const handleSave = async () => {
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+    if (!passwordRegex.test(password)) {
+      setError(
+        "Password must be at least 8 characters and include at least one uppercase letter, one lowercase letter, one number, and one special character."
+      );
+      setShowErrorModal(true);
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:8081/user/editUser", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: user._id,
-          password: password,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.accessToken) {
-            setUser({ ...user, accessToken: data.accessToken });
-            setEditMode(false);
-            setPassword("");
-          } else {
-            console.log("Failed to update password:", data);
-          }
-        })
-        .catch((error) => console.error("Error saving password:", error));
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user._id, password }),
+      });
+
+      const data = await res.json();
+
+      if (data.accessToken) {
+        setUser({ ...user, accessToken: data.accessToken });
+        setEditMode(false);
+        setPassword("");
+      } else {
+        setError(data.message || "Failed to update password");
+        setShowErrorModal(true);
+      }
+    } catch (err) {
+      setError(err.message || "An unexpected error occurred");
+      setShowErrorModal(true);
     }
   };
 
@@ -109,7 +120,9 @@ const UserProfile = () => {
             console.log("Failed to upload profile picture:", data.message);
           }
         })
-        .catch((error) => console.error("Error uploading profile picture:", error));
+        .catch((error) =>
+          console.error("Error uploading profile picture:", error)
+        );
     }
   };
 
@@ -140,7 +153,6 @@ const UserProfile = () => {
                 alt="Profile"
                 className="profile-img"
               />
-              {/* Profile picture upload input */}
               <Form.Group>
                 <Form.Label>Upload Profile Picture</Form.Label>
                 <Form.Control
@@ -157,7 +169,7 @@ const UserProfile = () => {
                   <strong>Email:</strong> {user.email}
                 </p>
 
-                {editMode ? (
+                {editMode && (
                   <Form.Group>
                     <Form.Label>New Password</Form.Label>
                     <Form.Control
@@ -166,7 +178,7 @@ const UserProfile = () => {
                       onChange={(e) => setPassword(e.target.value)}
                     />
                   </Form.Group>
-                ) : null}
+                )}
 
                 {editMode ? (
                   <button onClick={handleSave} className="save-button">
@@ -202,6 +214,19 @@ const UserProfile = () => {
           </div>
         </div>
       </div>
+
+      {/* Error Modal */}
+      <Modal show={showErrorModal} onHide={() => setShowErrorModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Error</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{error}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowErrorModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
