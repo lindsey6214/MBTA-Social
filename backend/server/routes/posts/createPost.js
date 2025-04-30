@@ -17,7 +17,7 @@ const extractMentions = (text) => {
 
 // Create a new post with moderation and mention validation
 router.post("/createPost", moderationMiddleware, async (req, res) => {
-  const { userId, content, mediaUris, username, latitude, longitude } = req.body;
+  const { userId, content, mediaUris, username, latitude, longitude, trainLineId } = req.body;
 
   try {
     // Validate that the author exists
@@ -51,6 +51,9 @@ const postData = {
   moderationFlag: req.censored ? "censored" : "clean",
   mentions: validUsernames
 };
+if (trainLineId) {
+  postData.trainLineId = trainLineId;  // 🛤️ attach train line ID
+}
 
 // Only add location if both latitude and longitude are present
 if (latitude && longitude) {

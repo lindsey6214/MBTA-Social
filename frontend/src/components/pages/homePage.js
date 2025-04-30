@@ -12,6 +12,8 @@ const HomePage = () => {
   const [userId, setUserId] = useState('');
   const [validUsernames, setValidUsernames] = useState([]);
   const [commentCounts, setCommentCounts] = useState({});
+  const [trainLines, setTrainLines] = useState([]);
+  const [selectedLine, setSelectedLine] = useState("");
 
   useEffect(() => {
     const userData = localStorage.getItem('user');
@@ -25,21 +27,23 @@ const HomePage = () => {
       }
     }
 
-    axios.get('http://localhost:8081/posts/')
-      .then(response => {
-        setPosts(response.data);
-        response.data.forEach(post => {
-          axios.get(`http://localhost:8081/comments/post/${post._id}`)
-            .then(res => {
-              setCommentCounts(prev => ({
-                ...prev,
-                [post._id]: res.data.length
-              }));
-            })
-            .catch(err => console.error('Error fetching comments for post:', post._id, err));
-        });
-      })
-      .catch(error => console.error('Error fetching posts:', error));
+    if (userId) {
+      axios.get(`http://localhost:8081/posts/homeFeed/${userId}`)
+        .then(response => {
+          setPosts(response.data);
+          response.data.forEach(post => {
+            axios.get(`http://localhost:8081/comments/post/${post._id}`)
+              .then(res => {
+                setCommentCounts(prev => ({
+                  ...prev,
+                  [post._id]: res.data.length
+                }));
+              })
+              .catch(err => console.error('Error fetching comments for post:', post._id, err));
+          });
+        })
+        .catch(error => console.error('Error fetching posts:', error));
+    }
 
     axios.get('http://localhost:8081/users/')
       .then(response => {
@@ -47,29 +51,40 @@ const HomePage = () => {
         setValidUsernames(usernames);
       })
       .catch(error => console.error('Error fetching usernames:', error));
-  }, []);
+
+    axios.get("http://localhost:8081/trainlines")
+      .then((res) => {
+        setTrainLines(res.data);
+      })
+      .catch((err) => {
+        console.error("Error loading train lines:", err);
+      });
+
+  }, [userId]);
 
   const handlePost = () => {
     if (!content.trim()) return;
-  
+
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-  
+
           axios.post('http://localhost:8081/posts/createPost', {
             username,
             userId,
             content,
-            latitude, // 🚀 send latitude
-            longitude // 🚀 send longitude
+            latitude,
+            longitude,
+            trainLineId: selectedLine || null
           })
-          .then(() => {
-            setContent('');
-            return axios.get('http://localhost:8081/posts/');
-          })
-          .then(response => setPosts(response.data))
-          .catch(error => console.error('Error creating post:', error));
+            .then(() => {
+              setContent('');
+              setSelectedLine('');
+              return axios.get(`http://localhost:8081/posts/homeFeed/${userId}`);
+            })
+            .then(response => setPosts(response.data))
+            .catch(error => console.error('Error creating post:', error));
         },
         (error) => {
           console.error("Geolocation error:", error);
@@ -80,7 +95,6 @@ const HomePage = () => {
       alert("Geolocation not supported by your browser.");
     }
   };
-  
 
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);
@@ -97,7 +111,7 @@ const HomePage = () => {
     return parts.map((part, i) => {
       if (i % 2 === 1) {
         const mentionedUser = part;
-        return validUsernames.includes(mentionedUser) 
+        return validUsernames.includes(mentionedUser)
           ? <span key={i} className="mention">@{mentionedUser}</span>
           : `@${mentionedUser}`;
       }
@@ -129,6 +143,18 @@ const HomePage = () => {
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
+          <select
+            value={selectedLine}
+            onChange={(e) => setSelectedLine(e.target.value)}
+            className="form-select"
+          >
+            <option value="">Attach a train line (optional)</option>
+            {trainLines.map((line) => (
+              <option key={line._id} value={line._id}>
+                {line.name}
+              </option>
+            ))}
+          </select>
           <div className="flex justify-end">
             <button className="new-post-button" onClick={handlePost}>Post</button>
           </div>
