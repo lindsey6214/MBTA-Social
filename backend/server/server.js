@@ -34,6 +34,8 @@ const unfollowTrainLine = require("./routes/following/unfollowTrainLine");
 const unfollowUser = require("./routes/following/unfollowUser");
 const messageRoutes = require("./routes/messaging/messageRoutes");
 const exploreRoutes = require('./routes/exploreRoutes');
+const homeFeed = require("./routes/posts/homeFeed");
+const getTrainLines = require("./routes/trainlines/getTrainLines");
 
 dotenv.config();
 
@@ -85,6 +87,7 @@ dbConnection()
     app.use("/posts", getPost);
     app.use("/posts", updatePost);
     app.use("/posts", deletePost);
+    app.use("/posts", homeFeed);
 
     // Comment routes
     app.use("/comments", createComment);
@@ -106,6 +109,9 @@ dbConnection()
     app.use("/following", unfollowUser);
     app.use("/following", followRequest);
     app.use("/following", removeFollower);
+
+    // Train line routes
+    app.use("/trainlines", getTrainLines);
 
     // Message routes
     app.use("/messages", messageRoutes);

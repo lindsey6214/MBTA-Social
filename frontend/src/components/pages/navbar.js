@@ -55,22 +55,25 @@ export default function Navbar() {
                     )}
               </Nav>
 
-          <Nav className="ms-auto">
-            {user ? (
-              <Nav.Link href="/profile" className="nav-link d-flex align-items-center">
-                {user.profileImage ? (
-                  <img
-                    src={user.profileImage}
-                    alt="Profile"
-                    className="rounded-circle"
-                    style={{ width: "30px", height: "30px", objectFit: "cover" }}
-                  />
-                ) : (
-                  <FaUserCircle size={28} />
-                )}
-              </Nav.Link>
-            ) : null}
-        </Nav>
+              <Nav className="ms-auto">
+  {user ? (
+    <>
+      <Nav.Link href="/profile" className="nav-link d-flex align-items-center">
+        {user.profileImage ? (
+          <img
+            src={user.profileImage}
+            alt="Profile"
+            className="rounded-circle"
+            style={{ width: "30px", height: "30px", objectFit: "cover" }}
+          />
+        ) : (
+          <FaUserCircle size={28} />
+        )}
+      </Nav.Link>
+    </>
+  ) : null}
+</Nav>
+
       </Container>
     </ReactNavbar>
 

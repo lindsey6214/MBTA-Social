@@ -23,6 +23,7 @@ const newPostSchema = new mongoose.Schema(
     },
     moderationFlag: { type: String, enum: ['clean', 'censored'], default: 'clean' },
     mentions: { type: [String], default: [] },
+    trainLineId: { type: mongoose.Schema.Types.ObjectId, ref: "TrainLine", default: null },
     timestamp: { type: Date, default: Date.now },
 
     // 🚀 NEW field: location
